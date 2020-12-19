@@ -62,6 +62,13 @@ def make_cards(text: str, prefix: str) -> tuple:
     return tuple(cards)
 
 
+def make_gap(text: str, text_lower: str, target: str) -> str:
+    result = ''
+    while target in text_lower:
+        i = text_lower.find
+    # todo reimplement with re.finditer!!
+
+
 def get_keywords(text: str, min_freq: int = 2) -> tuple:
     """RAKE is used to get keywords (single words). min_freq is a hyperparameter."""
     return tuple(word for word, score in rake_obj.run(text, maxWords=1, minFrequency=min_freq))
