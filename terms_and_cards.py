@@ -2,6 +2,7 @@
 from pprint import pprint
 
 
+import corefgraph
 from pyate import combo_basic
 # noinspection PyPackageRequirements
 import RAKE
@@ -28,6 +29,32 @@ nlp = spacy.load('en_core_web_sm')
 ####################################################################################################
 
 
+def make_cards(text: str, prefix: str) -> tuple:
+    """Make cards from text. Split into sentences first. Add prefix.
+    Return tuple of (question, answer) cards."""
+    cards = []
+    keywords = get_keywords(text)
+    terms = get_terms(text)
+    print('all keywords:', keywords)
+    print('all terms:', terms)
+    doc = nlp(text)
+    for sent in doc.sents:
+        if not (sent_stripped := sent.text.strip()):
+            continue
+        sub_keywords = get_keywords(sent_stripped, min_freq=1)
+        sub_terms = get_terms(sent_stripped)
+        print(sent_stripped)
+        print(sub_keywords)
+        print(sub_terms)
+        print()
+    return tuple(cards)
+
+
+def get_keywords(text: str, min_freq: int = 2) -> tuple:
+    """RAKE is used to get keywords (single words). min_freq is a hyperparameter."""
+    return tuple(word for word, score in rake_obj.run(text, maxWords=1, minFrequency=min_freq))
+
+
 def get_sentences(text: str) -> tuple:
     """Split text into sentences with spaCy"""
     doc = nlp(text)
@@ -41,11 +68,5 @@ def get_terms(text: str) -> tuple:
     return tuple(combo_basic(text).sort_values(ascending=False).index)
 
 
-def get_terms_rake(text: str) -> tuple:
-    """RAKE seems inferior to pyate (function get_terms)"""
-    return tuple(word for word, score in rake_obj.run(text, maxWords=1, minFrequency=2))
-
-
-# pprint(get_terms_rake(input_text)[:20])
-# pprint(get_terms(input_text)[:20])
-print(get_sentences(input_text))
+# print(get_sentences(input_text))
+make_cards(input_text, prefix='UIMA')
