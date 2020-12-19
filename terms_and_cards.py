@@ -24,6 +24,12 @@ rake_obj = RAKE.Rake(stop_words=stop_words)
 nlp = spacy.load('en_core_web_sm')
 
 ####################################################################################################
+# Constants
+####################################################################################################
+
+MIN_SENT_LENGTH = 50
+
+####################################################################################################
 # Functions
 ####################################################################################################
 
@@ -32,20 +38,27 @@ def make_cards(text: str, prefix: str) -> tuple:
     """Make cards from text. Split into sentences first. Add prefix.
     Return tuple of (question, answer) cards."""
     cards = []
-    keywords = get_keywords(text)
-    terms = get_terms(text)
-    print('all keywords:', keywords)
-    print('all terms:', terms)
     doc = nlp(text)
     for sent in doc.sents:
         if not (sent_stripped := sent.text.strip()):
             continue
         sub_keywords = get_keywords(sent_stripped, min_freq=1)
         sub_terms = get_terms(sent_stripped)
-        print(sent_stripped)
-        print(sub_keywords)
-        print(sub_terms)
-        print()
+        temp_cards = []
+        full_text = f'{prefix} {sent_stripped}'
+        full_text_lower = full_text.lower()
+        for keyword in sub_keywords:
+            question = full_text.replace(keyword, '_____')
+            temp_cards.append((question, keyword))
+        for term in sub_terms:
+            question = full_text.replace(term, '_____(?)')
+            temp_cards.append((question, term))
+        for question, answer in temp_cards:
+            print(question)
+            print('-' * 50)
+            print(answer)
+            if input('\nok? (y/n)').lower() == 'y':
+                cards.append((question, answer))
     return tuple(cards)
 
 
