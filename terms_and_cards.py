@@ -1,8 +1,7 @@
 # from collections import Counter
-from pprint import pprint
+# from pprint import pprint
 
 
-import corefgraph
 from pyate import combo_basic
 # noinspection PyPackageRequirements
 import RAKE

@@ -1,0 +1,4 @@
+pyate
+python-rake
+spacy
+stop-words
