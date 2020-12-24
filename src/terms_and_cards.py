@@ -1,6 +1,7 @@
 # from collections import Counter
 # from pprint import pprint
-
+import os
+import re
 
 from pyate import combo_basic
 # noinspection PyPackageRequirements
@@ -13,7 +14,7 @@ from stop_words import get_stop_words
 ####################################################################################################
 
 # read texts
-input_text = open('input.txt', 'r', encoding='utf-8').read()
+input_text = open(os.path.join('..', 'input.txt'), 'r', encoding='utf-8').read()
 non_empty_lines = [parag for line in input_text.split('\n') if (parag := line.strip())]
 
 # RAKE stands for Rapid Automatic Keyword Extraction. The algorithm itself is described in the
@@ -48,10 +49,20 @@ def make_cards(text: str, prefix: str) -> tuple:
         full_text = f'{prefix} {sent_stripped}'
         full_text_lower = full_text.lower()
         for keyword in sub_keywords:
-            question = full_text.replace(keyword, '_____')
+            question = make_gap(
+                text=full_text,
+                text_lower=full_text_lower,
+                target=keyword,
+                gap='_____'
+            )
             temp_cards.append((question, keyword))
         for term in sub_terms:
-            question = full_text.replace(term, '_____(?)')
+            question = make_gap(
+                text=full_text,
+                text_lower=full_text_lower,
+                target=term,
+                gap='_____(?)'
+            )
             temp_cards.append((question, term))
         for question, answer in temp_cards:
             print(question)
@@ -62,11 +73,13 @@ def make_cards(text: str, prefix: str) -> tuple:
     return tuple(cards)
 
 
-def make_gap(text: str, text_lower: str, target: str) -> str:
-    result = ''
-    while target in text_lower:
-        i = text_lower.find
-    # todo reimplement with re.finditer!!
+def make_gap(text: str, text_lower: str, target: str, gap: str = '_____') -> str:
+    matches = re.finditer(target, text_lower)
+    for match_obj in reversed(list(matches)):
+        print(match_obj)
+        start, end = match_obj.span()
+        text = text[:start] + gap + text[end:]
+    return text
 
 
 def get_keywords(text: str, min_freq: int = 2) -> tuple:
