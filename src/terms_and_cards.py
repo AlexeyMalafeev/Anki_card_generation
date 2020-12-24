@@ -38,6 +38,8 @@ MIN_SENT_LENGTH = 50
 def make_cards(text: str, prefix: str) -> tuple:
     """Make cards from text. Split into sentences first. Add prefix.
     Return tuple of (question, answer) cards."""
+    if not prefix.endswith(':'):
+        prefix += ':'
     cards = []
     doc = nlp(text)
     for sent in doc.sents:
@@ -46,24 +48,19 @@ def make_cards(text: str, prefix: str) -> tuple:
         sub_keywords = get_keywords(sent_stripped, min_freq=1)
         sub_terms = get_terms(sent_stripped)
         temp_cards = []
-        full_text = f'{prefix} {sent_stripped}'
-        full_text_lower = full_text.lower()
-        for keyword in sub_keywords:
-            question = make_gap(
-                text=full_text,
-                text_lower=full_text_lower,
-                target=keyword,
-                gap='_____'
-            )
-            temp_cards.append((question, keyword))
-        for term in sub_terms:
-            question = make_gap(
-                text=full_text,
-                text_lower=full_text_lower,
-                target=term,
-                gap='_____(?)'
-            )
-            temp_cards.append((question, term))
+        sent_stripped_lower = sent_stripped.lower()
+        for keywords_or_terms, gap in (
+                (sub_keywords, '_____'),
+                (sub_terms, '_____(?)')
+        ):
+            for keyword_or_term in keywords_or_terms:
+                question = make_gap(
+                    text=sent_stripped,
+                    text_lower=sent_stripped_lower,
+                    target=keyword_or_term,
+                    gap=gap
+                )
+                temp_cards.append((f'{prefix}: {question}', keyword_or_term))
         for question, answer in temp_cards:
             print(question)
             print('-' * 50)
@@ -76,7 +73,6 @@ def make_cards(text: str, prefix: str) -> tuple:
 def make_gap(text: str, text_lower: str, target: str, gap: str = '_____') -> str:
     matches = re.finditer(target, text_lower)
     for match_obj in reversed(list(matches)):
-        print(match_obj)
         start, end = match_obj.span()
         text = text[:start] + gap + text[end:]
     return text
