@@ -9,6 +9,8 @@ import RAKE
 import spacy
 from stop_words import get_stop_words
 
+import ui
+
 ####################################################################################################
 # Setup
 ####################################################################################################
@@ -60,13 +62,14 @@ def make_cards(text: str, prefix: str) -> tuple:
                     target=keyword_or_term,
                     gap=gap
                 )
-                temp_cards.append((f'{prefix}: {question}', keyword_or_term))
+                temp_cards.append((f'{prefix} {question}', keyword_or_term))
         for question, answer in temp_cards:
             print(question)
             print('-' * 50)
             print(answer)
-            if input('\nok? (y/n)').lower() == 'y':
+            if ui.yn('\nOk?2'):
                 cards.append((question, answer))
+            ui.cls()
     return tuple(cards)
 
 
