@@ -53,7 +53,7 @@ def menu(
         title: str = '',
         keys: str = '1234567890' + string.ascii_lowercase,
         new_line: bool = True
-) -> str:
+) -> str or object:
     """
 Ask the user to choose one of the options from the option list.
 The option list is either a tuple of strings
@@ -83,5 +83,10 @@ or a tuple of tuples (string, object),
             return returnables[keys.index(choice)]  # todo small inefficiency
 
 
-def yn(message):
+def show_text_preview(text: str, first_k_chars: int = 500) -> None:
+    print('TEXT PREVIEW:\n\n')
+    print(text[:first_k_chars])
+
+
+def yn(message: str) -> str or object:
     return menu((('yes', True), ('no', False)), message)
