@@ -90,6 +90,12 @@ or a tuple of tuples (string, object),
             return returnables[keys.index(choice)]  # todo small inefficiency
 
 
+def show_snippet(snippet: str, prefix: str = '') -> None:
+    if prefix:
+        prefix += ' '
+    print(f'\n{prefix}{snippet}')
+
+
 def show_text_preview(text: str, first_k_chars: int = 500) -> None:
     print('TEXT PREVIEW:\n\n')
     print(text[:first_k_chars])
