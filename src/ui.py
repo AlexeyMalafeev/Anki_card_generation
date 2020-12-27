@@ -48,6 +48,13 @@ If key is pressed, return its string; if no key is pressed, return 0
     return chr(ord(getch_inst()))
 
 
+def get_prefix() -> str:
+    prefix = input('\nChoose a prefix: ')
+    if not prefix.endswith(':'):
+        prefix += ':'
+    return prefix
+
+
 def menu(
         opt_list: tuple,  # of str or tuples: (str, obj)
         title: str = '',
