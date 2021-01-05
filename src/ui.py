@@ -142,5 +142,17 @@ def show_text_preview(text: str, first_k_chars: int = 500) -> None:
     print(text[:first_k_chars])
 
 
+def split_snippets(snippet: str, prefix: str):
+    show_snippet(snippet, prefix)
+    substr = input('Input a word or phrase that starts a new snippet: ')
+    if (idx := snippet.find(substr)) != -1:
+        first, second = snippet[:idx].rstrip(), snippet[idx:].lstrip()
+        print(first, second, sep='\n')
+        if yn('Is this ok?'):
+            return first, second
+    else:
+        return snippet, ''
+
+
 def yn(message: str) -> str or object:
     return menu((('yes', True), ('no', False)), message)

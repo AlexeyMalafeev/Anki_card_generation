@@ -88,7 +88,9 @@ class MainFlow:
             self.last_added = self.last_added[:idx] + self.last_added[idx + 1:]
 
     def main_loop(self):
-        for self.i, self.curr_snippet in enumerate(self.sentences[1:-1], start=1):
+        self.i = 1
+        while True:
+            self.curr_snippet = self.sentences[self.i]
             self.prev_snippet = self.sentences[self.i - 1]
             self.next_snippet = self.sentences[self.i + 1]
 
@@ -97,6 +99,9 @@ class MainFlow:
             if use_snippet:
                 self.clean_snippet()
                 self.cards_control()
+                self.i += 1
+                if self.i == len(self.sentences):
+                    break
         self.save()
         print('All done')
 
@@ -150,7 +155,13 @@ class MainFlow:
                 )
 
             elif choice == 'Split':  # todo
-                pass
+                first, second = ui.split_snippets(self.curr_snippet, self.prefix)
+                if second:
+                    self.curr_snippet = first
+                    self.next_snippet = second
+                    self.sentences = (self.sentences[:self.i] +
+                                      [self.curr_snippet, self.next_snippet] +
+                                      self.sentences[self.i + 1:])
 
             elif choice == 'Prefix':
                 self.prefix = ui.get_prefix()
