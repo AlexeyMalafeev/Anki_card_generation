@@ -72,7 +72,7 @@ class MainFlow:
             if choice == 'Add manually':
                 self.add_manually()
             elif choice == 'Delete':
-                self.delete_temp_by_idx()
+                self.delete_card_by_idx()
             elif choice == 'Next snippet':
                 break
         for card in self.last_added:
@@ -81,6 +81,9 @@ class MainFlow:
     def clean_snippet(self):
         self.curr_snippet = self.curr_snippet.replace('\t', ' ')
         self.curr_snippet = self.curr_snippet.replace('\n', '<br>')
+
+    def delete_card_by_idx(self):
+        idx =
 
     def main_loop(self):
         for self.i, self.curr_snippet in enumerate(self.sentences[1:-1], start=1):

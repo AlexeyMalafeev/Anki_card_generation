@@ -50,6 +50,19 @@ def cls():
     print(chr(27) + "[2J")
 
 
+def get_int(a: int, b: int) -> int:
+    assert a < b, f'{a = } is not less than {b = }'
+    while True:
+        i = input(f'Input an integer ({a}-{b}): ')
+        try:
+            i = int(i)
+        except ValueError:
+            continue
+        else:
+            if a <= i <= b:
+                return i
+
+
 def get_key():
     """
 If key is pressed, return its string; if no key is pressed, return 0
