@@ -1,9 +1,21 @@
 import os
+from pathlib import Path
 import sys
 
 import card_generation
 import text_processing
 import ui
+
+
+def save(cards, snippets_for_editing):
+    cards_path = Path('..', 'new_cards.txt')
+    cards_lines = [f'{q}\t{a}' for q, a in cards]
+    cards_text = '\n'.join(cards_lines)
+    cards_path.write_text(cards_text, encoding='utf-8')
+
+    editing_path = Path('..', 'snippets_for_editing.txt')
+    editing_path.write_text('\n'.join(snippets_for_editing), encoding='utf-8')
+    print('Saved')
 
 
 # read texts
@@ -68,10 +80,10 @@ for i, curr_snippet in enumerate(sentences[1:-1]):
             prefix = ui.get_prefix()
 
         elif choice == 'Save':
-            save()
+            save(cards, snippets_for_editing)
 
         elif choice == 'Save and exit':
-            save()
+            save(cards, snippets_for_editing)
             sys.exit()
 
         elif choice == 'Quit':
