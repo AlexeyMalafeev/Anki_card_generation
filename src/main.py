@@ -7,115 +7,134 @@ import text_processing
 import ui
 
 
-def save(cards, snippets_for_editing):
-    cards_path = Path('..', 'new_cards.txt')
-    cards_lines = [f'{q}\t{a}' for q, a in cards]
-    cards_text = '\n'.join(cards_lines)
-    cards_path.write_text(cards_text, encoding='utf-8')
+class MainFlow:
 
-    editing_path = Path('..', 'snippets_for_editing.txt')
-    editing_path.write_text('\n'.join(snippets_for_editing), encoding='utf-8')
-    print('Saved')
+    def __init__(self):
+        input_text = Path('..', 'input.txt').read_text(encoding='utf-8')
 
+        ui.show_text_preview(input_text, 500)
 
-# read texts
-input_text = open(os.path.join('..', 'input.txt'), 'r', encoding='utf-8').read()
-# non_empty_lines = [parag for line in input_text.split('\n') if (parag := line.strip())]
+        self.prefix = ui.get_prefix()
+        self.sentences = text_processing.get_sentences(input_text)
+        self.sentences = ('',) + self.sentences + ('',)
+        self.cards = []  # of tuples: (question_str, answer_str)
+        self.snippets_for_editing = []
 
-# print(get_sentences(input_text))
-# card_generation.make_cards(input_text, prefix='UIMA')
+        self.curr_snippet = ''
+        self.prev_snippet = ''
+        self.next_snippet = ''
 
-ui.show_text_preview(input_text, 500)
+        self.run()
 
-prefix = ui.get_prefix()
-sentences = text_processing.get_sentences(input_text)
-sentences = ('', ) + sentences + ('', )
-cards = []  # of tuples: (question_str, answer_str)
-snippets_for_editing = []
+    def run(self):
+        for i, curr_snippet in enumerate(self.sentences[1:-1]):
+            self.curr_snippet = curr_snippet
+            self.prev_snippet = self.sentences[i - 1]
+            self.next_snippet = self.sentences[i + 1]
 
-for i, curr_snippet in enumerate(sentences[1:-1]):
-    prev_snippet = sentences[i - 1]
-    next_snippet = sentences[i + 1]
+            snippet_control()
 
-    ui.show_snippet(curr_snippet, prefix)
+    def save(self, i):
+        cards_path = Path('..', 'new_cards.txt')
+        cards_lines = [f'{q}\t{a}' for q, a in self.cards]
+        cards_text = '\n'.join(cards_lines)
+        cards_path.write_text(cards_text, encoding='utf-8')
 
-    done_with_snippet_menu = False
-    go_to_next_snippet = True
+        editing_path = Path('..', 'snippets_for_editing.txt')
+        editing_path.write_text('\n'.join(self.snippets_for_editing), encoding='utf-8')
 
-    while True:
-        choice = ui.menu(
-            options=(
-                'Cards',
-                'Next',
-                'Edit',
-                'Join',
-                'Split',
-                'Prefix',
-                'Save',
-                'Save and exit',
-                'Quit',
-            ),
-            keys='cnejspSEQ',
-        )
+        remaining_path = Path('..', 'input.txt')
+        remaining_path.write_text('\n'.join(self.sentences[i:]), encoding='utf-8')
 
-        # todo I know this is ugly
-        if choice == 'Cards':
-            go_to_next_snippet = False
-            done_with_snippet_menu = True
+        print('Saved')
 
-        elif choice == 'Next':
-            done_with_snippet_menu = True
+    def snippet_control(self):
+        while True:
+            ui.show_snippet(self.curr_snippet, self.prefix)
 
-        elif choice == 'Edit':
-            snippets_for_editing.append(curr_snippet)
-            done_with_snippet_menu = True
+            done_with_snippet_menu = False
+            go_to_next_snippet = True
 
-        elif choice == 'Join':
-            curr_snippet = ui.join_snippets(curr_snippet, prev_snippet, next_snippet)
-
-        elif choice == 'Split':  # todo
-            pass
-
-        elif choice == 'Prefix':
-            prefix = ui.get_prefix()
-
-        elif choice == 'Save':
-            save(cards, snippets_for_editing)
-
-        elif choice == 'Save and exit':
-            save(cards, snippets_for_editing)
-            sys.exit()
-
-        elif choice == 'Quit':
-            sys.exit()
-
-
-    sub_keywords = term_extraction.get_keywords(sent_stripped, min_freq=1)
-    sub_terms = term_extraction.get_terms(sent_stripped)
-    temp_cards = []
-    sent_stripped_lower = sent_stripped.lower()
-
-    for keywords_or_terms, gap in (
-            (sub_keywords, '_____'),
-            (sub_terms, '_____(?)')
-    ):
-        for keyword_or_term in keywords_or_terms:
-            question = make_gap(
-                text=sent_stripped,
-                text_lower=sent_stripped_lower,
-                target=keyword_or_term,
-                gap=gap
+            choice = ui.menu(
+                options=(
+                    'Cards',
+                    'Next',
+                    'Edit',
+                    'Join',
+                    'Split',
+                    'Prefix',
+                    'Save',
+                    'Save and exit',
+                    'Quit',
+                ),
+                keys='cnejspSEQ',
             )
-            temp_cards.append((f'{prefix} {question}', keyword_or_term))
-    for question, answer in temp_cards:
-        print(question)
-        print('-' * 50)
-        print(answer)
 
-        if ui.yn('\nOk?2'):
-            cards.append((question, answer))
-        ui.cls()
-    return tuple(cards)
+            # todo I know this is ugly
+            if choice == 'Cards':
+                go_to_next_snippet = False
+                done_with_snippet_menu = True
+
+            elif choice == 'Next':
+                done_with_snippet_menu = True
+
+            elif choice == 'Edit':
+                self.snippets_for_editing.append(self.curr_snippet)
+                done_with_snippet_menu = True
+
+            elif choice == 'Join':
+                self.curr_snippet = ui.join_snippets(
+                    curr_snippet=self.curr_snippet,
+                    prev_snippet=self.prev_snippet,
+                    next_snippet=self.next_snippet,
+                )
+
+            elif choice == 'Split':  # todo
+                pass
+
+            elif choice == 'Prefix':
+                prefix = ui.get_prefix()
+
+            elif choice == 'Save':
+                self.save(i)
+
+            elif choice == 'Save and exit':
+                self.save(i)
+                sys.exit()
+
+            elif choice == 'Quit':
+                sys.exit()
+
+            if done_with_snippet_menu:
+                break
+
+
+    # sub_keywords = term_extraction.get_keywords(sent_stripped, min_freq=1)
+    # sub_terms = term_extraction.get_terms(sent_stripped)
+    # temp_cards = []
+    # sent_stripped_lower = sent_stripped.lower()
+    #
+    # for keywords_or_terms, gap in (
+    #         (sub_keywords, '_____'),
+    #         (sub_terms, '_____(?)')
+    # ):
+    #     for keyword_or_term in keywords_or_terms:
+    #         question = make_gap(
+    #             text=sent_stripped,
+    #             text_lower=sent_stripped_lower,
+    #             target=keyword_or_term,
+    #             gap=gap
+    #         )
+    #         temp_cards.append((f'{prefix} {question}', keyword_or_term))
+    # for question, answer in temp_cards:
+    #     print(question)
+    #     print('-' * 50)
+    #     print(answer)
+    #
+    #     if ui.yn('\nOk?2'):
+    #         cards.append((question, answer))
+    #     ui.cls()
+    # return tuple(cards)
 
 
 
