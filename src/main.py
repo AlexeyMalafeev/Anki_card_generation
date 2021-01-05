@@ -43,7 +43,7 @@ class MainFlow:
         )
         answer = target
         if ui.add_card_or_not(question, answer):
-            self.last_added.append((question, answer))
+            self.last_added.append((f'{self.prefix} {question}', answer))
 
     def cards_control(self):
         # really big todo: distribute cards by multiple files 3q3a, 8q8a etc., use tabs
@@ -55,8 +55,9 @@ class MainFlow:
             if ui.add_card_or_not(question, answer):
                 self.last_added.append((question, answer))
         while True:
+            ui.cls()
             cards_preview = '\n'.join(
-                (f'{i} {q} -> {a}' for i, (q, a) in enumerate(self.last_added))
+                (f'{i}. {q} -> {a}' for i, (q, a) in enumerate(self.last_added))
             )
             print(cards_preview)
             choice = ui.menu(
@@ -81,7 +82,7 @@ class MainFlow:
         self.curr_snippet = self.curr_snippet.replace('\n', '<br>')
 
     def delete_card_by_idx(self):
-        idx = ui.get_int(0, len(self.last_added))
+        idx = ui.get_int(0, len(self.last_added) - 1)
         print(f'Delete this?\n{self.last_added[idx]}')
         if ui.yn('Please confirm:'):
             self.last_added = self.last_added[:idx] + self.last_added[idx + 1:]

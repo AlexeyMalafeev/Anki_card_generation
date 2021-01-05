@@ -1,4 +1,3 @@
-An example UIM application might ingest plain text and identify entities, such as persons, places, organizations; or relations, such as works-for or located-at.
 UIMA is made of many things
 UIMA enables applications to be decomposed into components, for example "language identification" =
 > "language specific segmentation" =
