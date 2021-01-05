@@ -81,7 +81,7 @@ def join_snippets(
         curr_snippet: str,
         prev_snippet: str,
         next_snippet: str,
-) -> str:
+) -> tuple:
     other_snippet = menu(
         options=(
             (f'with previous: {prev_snippet}', 'previous'),
@@ -92,9 +92,11 @@ def join_snippets(
     )
     if other_snippet == 'previous':
         curr_snippet = f'{prev_snippet} {curr_snippet}'
+        prev_snippet = ''
     elif other_snippet == 'next':
         curr_snippet = f'{curr_snippet} {next_snippet}'
-    return curr_snippet
+        next_snippet = ''
+    return prev_snippet, curr_snippet, next_snippet
 
 
 def menu(
@@ -142,7 +144,10 @@ def show_text_preview(text: str, first_k_chars: int = 500) -> None:
     print(text[:first_k_chars])
 
 
-def split_snippets(snippet: str, prefix: str):
+def split_snippets(
+        snippet: str,
+        prefix: str
+) -> tuple:
     show_snippet(snippet, prefix)
     substr = input('Input a word or phrase that starts a new snippet: ')
     if (idx := snippet.find(substr)) != -1:

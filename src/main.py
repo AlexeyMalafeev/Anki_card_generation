@@ -87,6 +87,21 @@ class MainFlow:
         if ui.yn('Please confirm:'):
             self.last_added = self.last_added[:idx] + self.last_added[idx + 1:]
 
+    def join_snippets(self):
+        self.prev_snippet, self.curr_snippet, self.next_snippet = ui.join_snippets(
+            curr_snippet=self.curr_snippet,
+            prev_snippet=self.prev_snippet,
+            next_snippet=self.next_snippet,
+        )
+        if not self.prev_snippet:
+            self.sentences = (self.sentences[:max(self.i - 1, 1)] +
+                              [self.curr_snippet] +
+                              self.sentences[self.i + 1:])
+        if not self.next_snippet:
+            self.sentences = (self.sentences[:self.i] +
+                              [self.curr_snippet] +
+                              self.sentences[min(self.i + 2, len(self.sentences) - 1):])
+
     def main_loop(self):
         self.i = 1
         while True:
@@ -148,20 +163,10 @@ class MainFlow:
                 return False
 
             elif choice == 'Join':
-                self.curr_snippet = ui.join_snippets(
-                    curr_snippet=self.curr_snippet,
-                    prev_snippet=self.prev_snippet,
-                    next_snippet=self.next_snippet,
-                )
+                self.join_snippets()
 
             elif choice == 'Split':  # todo
-                first, second = ui.split_snippets(self.curr_snippet, self.prefix)
-                if second:
-                    self.curr_snippet = first
-                    self.next_snippet = second
-                    self.sentences = (self.sentences[:self.i] +
-                                      [self.curr_snippet, self.next_snippet] +
-                                      self.sentences[self.i + 1:])
+                self.split_snippets()
 
             elif choice == 'Prefix':
                 self.prefix = ui.get_prefix()
@@ -175,6 +180,15 @@ class MainFlow:
 
             elif choice == 'Quit':
                 sys.exit()
+
+    def split_snippets(self):
+        first, second = ui.split_snippets(self.curr_snippet, self.prefix)
+        if second:
+            self.curr_snippet = first
+            self.next_snippet = second
+            self.sentences = (self.sentences[:self.i] +
+                              [self.curr_snippet, self.next_snippet] +
+                              self.sentences[self.i + 1:])
 
 
 MainFlow()
