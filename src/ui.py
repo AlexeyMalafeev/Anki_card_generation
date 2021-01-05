@@ -37,8 +37,12 @@ class _GetchWindows:
 getch_inst = Getch()
 
 
-def add_card_or_not(card):
-
+def add_card_or_not(question, answer):
+    cls()
+    print(question)
+    print('-' * 50)
+    print(answer)
+    return yn('\nOk?')
 
 
 def cls():
