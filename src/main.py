@@ -95,11 +95,11 @@ class MainFlow:
         )
         if not self.prev_snippet:
             self.sentences = (self.sentences[:max(self.i - 1, 1)] +
-                              [self.curr_snippet] +
+                              (self.curr_snippet, ) +
                               self.sentences[self.i + 1:])
         if not self.next_snippet:
             self.sentences = (self.sentences[:self.i] +
-                              [self.curr_snippet] +
+                              (self.curr_snippet, ) +
                               self.sentences[min(self.i + 2, len(self.sentences) - 1):])
 
     def main_loop(self):
@@ -187,7 +187,7 @@ class MainFlow:
             self.curr_snippet = first
             self.next_snippet = second
             self.sentences = (self.sentences[:self.i] +
-                              [self.curr_snippet, self.next_snippet] +
+                              (self.curr_snippet, self.next_snippet) +
                               self.sentences[self.i + 1:])
 
 
