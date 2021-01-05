@@ -47,9 +47,7 @@ class MainFlow:
 
     def cards_control(self):
         # really big todo: distribute cards by multiple files 3q3a, 8q8a etc., use tabs
-        # todo preview cards, delete some if necessary
         # todo add snippet to manually edit late
-        # todo manual add card (choose target words/terms)
         # todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
         self.last_added = []

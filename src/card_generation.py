@@ -45,8 +45,13 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> st
     for match_obj in reversed(list(matches)):
         start, end = match_obj.span()
         text = text[:start] + gap + text[end:]
-    text = re.sub(f'(^| )a {gap}', fr'\1a(n) {gap}', text)
-    text = re.sub(f'(^| )an {gap}', fr'\1a(n) {gap}', text)
-    text = re.sub(f'(^| )A {gap}', fr'\1A(n) {gap}', text)
-    text = re.sub(f'(^| )An {gap}', fr'\1A(n) {gap}', text)
+    try:
+        # Note: because of re exceptions, cannot use _____(?)
+        text = re.sub(f'(^| )a {WORD_GAP}', fr'\1a(n) {WORD_GAP}', text)
+        text = re.sub(f'(^| )an {WORD_GAP}', fr'\1a(n) {WORD_GAP}', text)
+        text = re.sub(f'(^| )A {WORD_GAP}', fr'\1A(n) {WORD_GAP}', text)
+        text = re.sub(f'(^| )An {WORD_GAP}', fr'\1A(n) {WORD_GAP}', text)
+    except re.error:
+        print(f'{text = }, {target = }, {gap = }')
+        raise
     return text
