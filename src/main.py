@@ -26,7 +26,7 @@ class MainFlow:
 
         self.main_loop()
 
-    def card_control(self):
+    def cards_control(self):
         # todo manually edit later
         # todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
@@ -34,15 +34,22 @@ class MainFlow:
             if ui.add_card_or_not(question, answer):
                 self.cards.append((question, answer))
 
+    def clean_snippet(self):
+        self.curr_snippet = self.curr_snippet.replace('\t', ' ')
+        self.curr_snippet = self.curr_snippet.replace('\n', '<br>')
+
     def main_loop(self):
-        for self.i, self.curr_snippet in enumerate(self.sentences[1:-1]):
+        for self.i, self.curr_snippet in enumerate(self.sentences[1:-1], start=1):
             self.prev_snippet = self.sentences[self.i - 1]
             self.next_snippet = self.sentences[self.i + 1]
 
             use_snippet = self.snippet_control()
 
             if use_snippet:
-                self.card_control()
+                self.clean_snippet()
+                self.cards_control()
+        self.save()
+        print('All done')
 
     def save(self):
         cards_path = Path('..', 'new_cards.txt')
@@ -109,3 +116,6 @@ class MainFlow:
 
             elif choice == 'Quit':
                 sys.exit()
+
+
+MainFlow()

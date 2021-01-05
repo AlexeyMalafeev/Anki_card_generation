@@ -1,56 +1,67 @@
-Welcome to the Apache UIMA project
-
-Donate to ASF
-Follow us on Twitter
-Welcome to the Apache UIMA™ project. Our goal is to support a thriving community of users and developers of UIMA frameworks, tools, and annotators, facilitating the analysis of unstructured content such as text, audio and video.
-
-What is UIMA?
-Unstructured Information Management applications are software systems that analyze large volumes of unstructured information in order to discover knowledge that is relevant to an end user. An example UIM application might ingest plain text and identify entities, such as persons, places, organizations; or relations, such as works-for or located-at.
-
+An example UIM application might ingest plain text and identify entities, such as persons, places, organizations; or relations, such as works-for or located-at.
 UIMA is made of many things
-UIMA enables applications to be decomposed into components, for example "language identification" => "language specific segmentation" => "sentence boundary detection" => "entity detection (person/place names etc.)". Each component implements interfaces defined by the framework and provides self-describing metadata via XML descriptor files. The framework manages these components and the data flow between them. Components are written in Java or C++; the data that flows between components is designed for efficient mapping between these languages.
-
+UIMA enables applications to be decomposed into components, for example "language identification" =
+> "language specific segmentation" =
+> "sentence boundary detection" =
+> "entity detection (person/place names etc.)".
+Each component implements interfaces defined by the framework and provides self-describing metadata via XML descriptor files.
+The framework manages these components and the data flow between them.
+Components are written in Java or C++; the data that flows between components is designed for efficient mapping between these languages.
 UIMA additionally provides capabilities to wrap components as network services, and can scale to very large volumes by replicating processing pipelines over a cluster of networked nodes.
-
-Apache UIMA is an Apache-licensed open source implementation of the UIMA specification [pdf] [doc] (that specification is, in turn, being developed concurrently by a technical committee within OASIS , a standards organization). We invite and encourage you to participate in both the implementation and specification efforts.
-
+Apache UIMA is an Apache-licensed open source implementation of the UIMA specification [pdf] [doc] (that specification is, in turn, being developed concurrently by a technical committee within OASIS , a standards organization).
+We invite and encourage you to participate in both the implementation and specification efforts.
 Here you can find:
-
 Frameworks
 Components, and
 Infrastructure,
-all licensed under the Apache license. The dashed-line boxes above are placeholders for possible future additions.
-
-The Frameworks run the components, and are available for both Java and C++. The Java Framework supports running both Java and non-Java components (using the C++ framework). The C++ framework, besides supporting annotators written in C/C++, also supports Perl, Python, and TCL annotators. The UIMA-AS and UIMA-DUCC are both Scaleout Frameworks and are addons to the base Java framework. The UIMA-AS supports very flexible scaleout capability based on JMS (Java Messaging Services) and ActiveMQ. The UIMA-DUCC extends UIMA-AS by providing cluster management services to automate the scale-out of UIMA pipelines over computing clusters. Visit the UIMA-DUCC live demo description and the UIMA-DUCC live demo itself.
-
-The frameworks support configuring and running pipelines of Annotator components. These components do the actual work of analyzing the unstructured information. Users can write their own annotators, or configure and use pre-existing annotators. Some annotators are available as part of this project; others are contained in various repositories on the internet. GitHub.com lists over 900 repositories that have dependencies on the UIMA Java SDK core.
-
-In 2018, the internals of the UIMA Java framework were redesigned for a tighter integration with Java including for example, Java Streams support for working with annotations, and for supporting higher performance on modern processors with memory caches. This is available as Version 3.x.x of the UIMA Java SDK, and associated components. Version 2 continues to be supported, but new work should use version 3.
-
+all licensed under the Apache license.
+The dashed-line boxes above are placeholders for possible future additions.
+The Frameworks run the components, and are available for both Java and C++.
+The Java Framework supports running both Java and non-Java components (using the C++ framework).
+The C++ framework, besides supporting annotators written in C/C++, also supports Perl, Python, and TCL annotators.
+The UIMA-AS and UIMA-DUCC are both Scaleout Frameworks and are addons to the base Java framework.
+The UIMA-AS supports very flexible scaleout capability based on JMS (Java Messaging Services) and ActiveMQ.
+The UIMA-DUCC extends UIMA-AS by providing cluster management services to automate the scale-out of UIMA pipelines over computing clusters.
+Visit the UIMA-DUCC live demo description and the UIMA-DUCC live demo itself.
+The frameworks support configuring and running pipelines of Annotator components.
+These components do the actual work of analyzing the unstructured information.
+Users can write their own annotators, or configure and use pre-existing annotators.
+Some annotators are available as part of this project; others are contained in various repositories on the internet.
+GitHub.com lists over 900 repositories that have dependencies on the UIMA Java SDK core.
+In 2018, the internals of the UIMA Java framework were redesigned for a tighter integration with Java including for example, Java Streams support for working with annotations, and for supporting higher performance on modern processors with memory caches.
+This is available as Version 3.x.x of the UIMA Java SDK, and associated components.
+Version 2 continues to be supported, but new work should use version 3.
 An extensive rule-based scripting language (RUTA), an associated analysis engine built on top of UIMA, and an Eclipse-based tooling workbench for interactively developing and testing the rules, is part of this project.
-
 Additional infrastructure support components include a simple server that can receive REST requests and return annotation results, for use by other web services.
-
 The Addons and Sandbox is for Addons (Annotators and other things) for UIMA, and a place where new ideas are developed for potential incorporation into the project.
-
-Getting Started: Why UIMA
+Getting Started:
+Why UIMA
 The "Getting Started: Why UIMA" guide should help you to understand what UIMA™ is, what it can be used for, and how you can use it.
-
 What Is UIMA
-UIMA stands for Unstructured Information Management Architecture and is a component architecture and software framework implementation for the analysis of unstructured content like text, video and audio data. Unstructured information represents the largest, most current and fastest growing source of information available to businesses and governments.
-
-The motivation to develop such a framework was to build a common platform for unstructured analytics, to foster reuse of analysis components and to reduce duplication of analysis development. The pluggable architecture of UIMA allows to easily plug-in your own analysis components and combine them together with others. A full analysis task of a solution using unstructured analytics like search or government intelligence applications is often not a monolithic thing but a multi-stage process where different modules need to build on each other to get a powerful analysis chain. In some cases also annotators from different specialized vendors may need to work together to produce the results needed. The UIMA application interested in such analysis results does not need to know the details of how annotators work together to create the results. The UIMA framework take care of the integration and orchestration of multiple annotators.
-
+UIMA stands for Unstructured Information Management Architecture and is a component architecture and software framework implementation for the analysis of unstructured content like text, video and audio data.
+Unstructured information represents the largest, most current and fastest growing source of information available to businesses and governments.
+The motivation to develop such a framework was to build a common platform for unstructured analytics, to foster reuse of analysis components and to reduce duplication of analysis development.
+The pluggable architecture of UIMA allows to easily plug-in your own analysis components and combine them together with others.
+A full analysis task of a solution using unstructured analytics like search or government intelligence applications is often not a monolithic thing but a multi-stage process where different modules need to build on each other to get a powerful analysis chain.
+In some cases also annotators from different specialized vendors may need to work together to produce the results needed.
+The UIMA application interested in such analysis results does not need to know the details of how annotators work together to create the results.
+The UIMA framework take care of the integration and orchestration of multiple annotators.
 So the major goal of UIMA is to transform unstructured information to structured information by orchestrating analysis engines to detect entities or relations and thus to build the bridge between the unstructured and the structured world.
-
 analytics world
 The Apache UIMA project provides two Apache licensed UIMA framework implementations, one for Java and one for C++, and an extension to support Asynchronous Scaleout, called UIMA-AS.
-
 What Can UIMA Be Used For
-UIMA is, by itself, an empty framework. Its purpose is to enable a world-wide, diverse community to develop inter-operable, often complex analytic components, and allow them to be combined and run together, with framework supplied scaled-out and remoting as needed. Some of the major external UIMA resources are linked on the Apache UIMA website "UIMA Resources on the Web". You can also check the UIMA Addons and Sandbox for components that can be used and combined to build your own application.
-
-There are lots of use cases where UIMA may be applicable. One of the major ones are search applications. Within search applications, the unstructured content that is available mainly as text in various kinds must be processed and analyzed to be searchable. To obtain a powerful search application, the text content must be analyzed to get the document language followed by language dependent linguistic processing such as tokenization, lemmatization and part of speech detection. After these steps a more sophisticated analysis like entity detection and relation detection between entities can be done. For all these analysis steps UIMA and UIMA components can be used.
-
-Another important use case is business or government intelligence. For example, UIMA analysis is used to extract structured information from car repair reports. This data is then used for quality feed-back and problem early warning systems.
-
+UIMA
+is, by itself, an empty framework.
+Its purpose is to enable a world-wide, diverse community to develop inter-operable, often complex analytic components, and allow them to be combined and run together, with framework supplied scaled-out and remoting as needed.
+Some of the major external UIMA resources are linked on the Apache UIMA website "UIMA Resources on the Web".
+You can also check the UIMA Addons and Sandbox for components that can be used and combined to build your own application.
+There are lots of use cases where UIMA may be applicable.
+One of the major ones are search applications.
+Within search applications, the unstructured content that is available mainly as text in various kinds must be processed and analyzed to be searchable.
+To obtain a powerful search application, the text content must be analyzed to get the document language followed by language dependent linguistic processing such as tokenization, lemmatization and part of speech detection.
+After these steps a more sophisticated analysis like entity detection and relation detection between entities can be done.
+For all these analysis steps UIMA and UIMA components can be used.
+Another important use case is business or government intelligence.
+For example, UIMA analysis is used to extract structured information from car repair reports.
+This data is then used for quality feed-back and problem early warning systems.
 Other possible solutions where UIMA can be used for are the analsyis of call center notes to detect product problems and customer issues or a public image monitoring solution to find out how others for example in internet forums or press releases think about my product or company.

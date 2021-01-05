@@ -39,6 +39,7 @@ getch_inst = Getch()
 
 def add_card_or_not(question, answer):
     cls()
+    print('Candidate card:\n')
     print(question)
     print('-' * 50)
     print(answer)
@@ -67,13 +68,14 @@ def join_snippets(
         curr_snippet: str,
         prev_snippet: str,
         next_snippet: str,
-):
+) -> str:
     other_snippet = menu(
         options=(
             (f'with previous: {prev_snippet}', 'previous'),
             (f'with next: {next_snippet}', 'next'),
             ('go back', 'back'),
         ),
+        title='Join'
     )
     if other_snippet == 'previous':
         curr_snippet = f'{prev_snippet} {curr_snippet}'
@@ -96,13 +98,13 @@ or a tuple of tuples (string, object),
 (then return the object matching the choice).
     """
     if isinstance(options[0], tuple) and len(options[0]) == 2:
-        options = []
+        displayables = []
         returnables = []
         for a, b in options:
-            options.append(a)
+            displayables.append(a)
             returnables.append(b)
     else:
-        options = returnables = options
+        displayables = returnables = options
     keys = keys[:len(options)]
     if title:
         print(title)
@@ -110,17 +112,16 @@ or a tuple of tuples (string, object),
         st = '\n'
     else:
         st = '; '
-    print(st.join([f' {key} - {option}' for key, option in zip(keys, options)]))
+    print(st.join([f' {key} - {option}' for key, option in zip(keys, displayables)]))
     while True:
         choice = get_key()
         if choice in keys:
             return returnables[keys.index(choice)]  # todo small inefficiency
 
 
-def show_snippet(snippet: str, prefix: str = '') -> None:
-    if prefix:
-        prefix += ' '
-    print(f'\n{prefix}{snippet}')
+def show_snippet(snippet: str, prefix: str) -> None:
+    cls()
+    print(f'Candidate snippet:\n{prefix} {snippet}')
 
 
 def show_text_preview(text: str, first_k_chars: int = 500) -> None:
