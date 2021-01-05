@@ -37,6 +37,10 @@ class _GetchWindows:
 getch_inst = Getch()
 
 
+def add_card_or_not(card):
+
+
+
 def cls():
     print(chr(27) + "[2J")
 
