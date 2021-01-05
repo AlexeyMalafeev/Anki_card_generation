@@ -1,9 +1,7 @@
-import os
 from pathlib import Path
 import sys
 
 import card_generation
-import term_extraction
 import text_processing
 import ui
 
@@ -29,15 +27,12 @@ class MainFlow:
         self.main_loop()
 
     def card_control(self):
-        # card-level options:
-        # add card
-        # drop card
-        # manually edit later
-        # save and exit
+        # todo manually edit later
+        # todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
         for question, answer in temp_cards:
-
-        return tuple(cards)
+            if ui.add_card_or_not(question, answer):
+                self.cards.append((question, answer))
 
     def main_loop(self):
         for self.i, self.curr_snippet in enumerate(self.sentences[1:-1]):
