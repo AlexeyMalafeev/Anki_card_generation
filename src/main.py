@@ -31,8 +31,8 @@ class MainFlow:
         ui.show_snippet(self.curr_snippet, self.prefix)
         snippet_lower = self.curr_snippet.lower()
         while True:
-            target = input('Input target word or phrase: ').lower()
-            if target in snippet_lower:
+            target = input('Input target word or phrase: ')
+            if target.lower() in snippet_lower:
                 break
         gap = card_generation.PHRASE_GAP if ' ' in target else card_generation.WORD_GAP
         question = card_generation.make_gap(
@@ -47,7 +47,6 @@ class MainFlow:
 
     def cards_control(self):
         # really big todo: distribute cards by multiple files 3q3a, 8q8a etc., use tabs
-        # todo add snippet to manually edit late
         # todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
         self.last_added = []
@@ -56,10 +55,11 @@ class MainFlow:
                 self.last_added.append((question, answer))
         while True:
             ui.cls()
+            self.last_added.sort()
             cards_preview = '\n'.join(
                 (f'{i}. {q} -> {a}' for i, (q, a) in enumerate(self.last_added))
             )
-            print(cards_preview)
+            print(cards_preview, '\n')
             choice = ui.menu(
                 options=(
                     'Add manually',
@@ -97,10 +97,12 @@ class MainFlow:
             self.sentences = (self.sentences[:max(self.i - 1, 1)] +
                               (self.curr_snippet, ) +
                               self.sentences[self.i + 1:])
+            self.prev_snippet = self.sentences[self.i - 1]
         if not self.next_snippet:
             self.sentences = (self.sentences[:self.i] +
                               (self.curr_snippet, ) +
                               self.sentences[min(self.i + 2, len(self.sentences) - 1):])
+            self.next_snippet = self.sentences[self.i + 1]
 
     def main_loop(self):
         self.i = 1
@@ -114,9 +116,8 @@ class MainFlow:
             if use_snippet:
                 self.clean_snippet()
                 self.cards_control()
-                self.i += 1
-                if self.i == len(self.sentences):
-                    break
+            if self.i == len(self.sentences):
+                break
         self.save()
         print('All done')
 
@@ -135,6 +136,7 @@ class MainFlow:
         print('Saved')
 
     def snippet_control(self):
+        # todo add option to edit snippet right now (replace)
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
             choice = ui.menu(
@@ -153,13 +155,16 @@ class MainFlow:
             )
 
             if choice == 'Cards':
+                self.i += 1
                 return True
 
             elif choice == 'Next':
+                self.i += 1
                 return False
 
             elif choice == 'Edit':
                 self.snippets_for_editing.append(self.curr_snippet)
+                self.i += 1
                 return False
 
             elif choice == 'Join':

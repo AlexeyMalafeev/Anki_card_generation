@@ -1,8 +1,4 @@
-UIMA is made of many things
-UIMA enables applications to be decomposed into components, for example "language identification" =
-> "language specific segmentation" =
-> "sentence boundary detection" =
-> "entity detection (person/place names etc.)".
+UIMA enables applications to be decomposed into components, for example "language identification" = > "language specific segmentation" = > "sentence boundary detection" = > "entity detection (person/place names etc.)".
 Each component implements interfaces defined by the framework and provides self-describing metadata via XML descriptor files.
 The framework manages these components and the data flow between them.
 Components are written in Java or C++; the data that flows between components is designed for efficient mapping between these languages.
