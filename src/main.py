@@ -83,7 +83,10 @@ class MainFlow:
         self.curr_snippet = self.curr_snippet.replace('\n', '<br>')
 
     def delete_card_by_idx(self):
-        idx =
+        idx = ui.get_int(0, len(self.last_added))
+        print(f'Delete this?\n{self.last_added[idx]}')
+        if ui.yn('Please confirm:'):
+            self.last_added = self.last_added[:idx] + self.last_added[idx + 1:]
 
     def main_loop(self):
         for self.i, self.curr_snippet in enumerate(self.sentences[1:-1], start=1):
