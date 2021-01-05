@@ -17,6 +17,7 @@ class MainFlow:
         self.sentences = text_processing.get_sentences(input_text)
         self.sentences = ('',) + self.sentences + ('',)
         self.cards = []  # of tuples: (question_str, answer_str)
+        self.last_added = []  # of tuples: (question_str, answer_str)
         self.snippets_for_editing = []
 
         self.curr_snippet = ''
@@ -27,14 +28,37 @@ class MainFlow:
         self.main_loop()
 
     def cards_control(self):
+        # really big todo: distribute cards by multiple files 3q3a, 8q8a etc., use tabs
         # todo preview cards, delete some if necessary
         # todo add snippet to manually edit late
         # todo manual add card (choose target words/terms)
         # todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
+        self.last_added = []
         for question, answer in temp_cards:
             if ui.add_card_or_not(question, answer):
-                self.cards.append((question, answer))
+                self.last_added.append((question, answer))
+        while True:
+            cards_preview = '\n'.join(
+                (f'{i} {q} -> {a}' for i, (q, a) in enumerate(self.last_added))
+            )
+            print(cards_preview)
+            choice = ui.menu(
+                options=(
+                    'Add manually',
+                    'Delete',
+                    'Next snippet',
+                ),
+                keys='adn',
+            )
+            if choice == 'Add manually':
+                self.add_manually()
+            elif choice == 'Delete':
+                self.delete_temp_by_idx()
+            elif choice == 'Next snippet':
+                break
+        for card in self.last_added:
+            self.cards.append(card)
 
     def clean_snippet(self):
         self.curr_snippet = self.curr_snippet.replace('\t', ' ')

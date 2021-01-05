@@ -1,5 +1,0 @@
-UIMA: _____(?) applications are software systems that analyze large volumes of unstructured information in order to discover knowledge that is relevant to an end user.	unstructured information management
-UIMA: _____(?) are software systems that analyze large volumes of unstructured information in order to discover knowledge that is relevant to an end user.	unstructured information management applications
-UIMA: Unstructured Information Management applications are software systems that analyze large volumes of unstructured information in order to discover knowledge that is relevant to an _____(?).	end user
-UIMA: Unstructured Information Management applications are software systems that analyze _____(?) of unstructured information in order to discover knowledge that is relevant to an end user.	large volumes
-UIMA: Unstructured Information Management applications are _____(?) that analyze large volumes of unstructured information in order to discover knowledge that is relevant to an end user.	software systems
