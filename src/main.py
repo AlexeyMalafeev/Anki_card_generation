@@ -1,4 +1,5 @@
 import os
+import sys
 
 import card_generation
 import text_processing
@@ -21,11 +22,13 @@ cards = []  # of tuples: (question_str, answer_str)
 snippets_for_editing = []
 
 for i, curr_snippet in enumerate(sentences[1:-1]):
-    go_to_next_snippet = True
     prev_snippet = sentences[i - 1]
     next_snippet = sentences[i + 1]
 
     ui.show_snippet(curr_snippet, prefix)
+
+    done_with_snippet_menu = False
+    go_to_next_snippet = True
 
     while True:
         choice = ui.menu(
@@ -46,21 +49,33 @@ for i, curr_snippet in enumerate(sentences[1:-1]):
         # todo I know this is ugly
         if choice == 'Cards':
             go_to_next_snippet = False
+            done_with_snippet_menu = True
 
         elif choice == 'Next':
-            pass
+            done_with_snippet_menu = True
 
         elif choice == 'Edit':
             snippets_for_editing.append(curr_snippet)
+            done_with_snippet_menu = True
 
         elif choice == 'Join':
             curr_snippet = ui.join_snippets(curr_snippet, prev_snippet, next_snippet)
 
-        elif choice == 'Split':
+        elif choice == 'Split':  # todo
             pass
 
         elif choice == 'Prefix':
             prefix = ui.get_prefix()
+
+        elif choice == 'Save':
+            save()
+
+        elif choice == 'Save and exit':
+            save()
+            sys.exit()
+
+        elif choice == 'Quit':
+            sys.exit()
 
 
     sub_keywords = term_extraction.get_keywords(sent_stripped, min_freq=1)
