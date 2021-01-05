@@ -27,7 +27,9 @@ class MainFlow:
         self.main_loop()
 
     def cards_control(self):
-        # todo manually edit later
+        # todo preview cards, delete some if necessary
+        # todo add snippet to manually edit late
+        # todo manual add card (choose target words/terms)
         # todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
         for question, answer in temp_cards:
@@ -83,7 +85,6 @@ class MainFlow:
                 keys='cnejspSEQ',
             )
 
-            # todo I know this is ugly
             if choice == 'Cards':
                 return True
 

@@ -38,6 +38,8 @@ def make_candidate_cards(snippet: str, prefix: str) -> tuple:
 
 def make_gap(text: str, text_lower: str, target: str, gap: str = '_____') -> str:
     matches = re.finditer(target, text_lower)
+    if target.endswith('s'):
+        gap += 's'
     for match_obj in reversed(list(matches)):
         start, end = match_obj.span()
         text = text[:start] + gap + text[end:]
