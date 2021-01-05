@@ -152,7 +152,7 @@ def split_snippets(
     substr = input('Input a word or phrase that starts a new snippet: ')
     if (idx := snippet.find(substr)) != -1:
         first, second = snippet[:idx].rstrip(), snippet[idx:].lstrip()
-        print(first, second, sep='\n')
+        print(f'Snippet 1: {prefix} {first}\n----------\nSnippet 2: {prefix} {second}')
         if yn('Is this ok?'):
             return first, second
     else:
