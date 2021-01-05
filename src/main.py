@@ -5,10 +5,6 @@ import text_processing
 import ui
 
 
-def not_implemented():
-    pass
-
-
 # read texts
 input_text = open(os.path.join('..', 'input.txt'), 'r', encoding='utf-8').read()
 # non_empty_lines = [parag for line in input_text.split('\n') if (parag := line.strip())]
@@ -21,29 +17,51 @@ ui.show_text_preview(input_text, 500)
 prefix = ui.get_prefix()
 sentences = text_processing.get_sentences(input_text)
 sentences = ('', ) + sentences + ('', )
-cards = []
+cards = []  # of tuples: (question_str, answer_str)
+snippets_for_editing = []
 
 for i, curr_snippet in enumerate(sentences[1:-1]):
+    go_to_next_snippet = True
     prev_snippet = sentences[i - 1]
     next_snippet = sentences[i + 1]
 
     ui.show_snippet(curr_snippet, prefix)
 
-    func, kwargs = ui.menu(
-        opt_list=(
-            ('Next', (not_implemented, {})),
-            ('Edit', (not_implemented, {})),
-            ('Join', (not_implemented, {})),
-            ('Split', (not_implemented, {})),
-            ('Prefix', (not_implemented, {})),
-            ('Save', (not_implemented, {})),
-            ('Save and exit', (not_implemented, {})),
-            ('Quit', (not_implemented, {})),
-        ),
-        keys='nejspSEQ',
-    )
+    while True:
+        choice = ui.menu(
+            options=(
+                'Cards',
+                'Next',
+                'Edit',
+                'Join',
+                'Split',
+                'Prefix',
+                'Save',
+                'Save and exit',
+                'Quit',
+            ),
+            keys='cnejspSEQ',
+        )
 
-    func(**kwargs)
+        # todo I know this is ugly
+        if choice == 'Cards':
+            go_to_next_snippet = False
+
+        elif choice == 'Next':
+            pass
+
+        elif choice == 'Edit':
+            snippets_for_editing.append(curr_snippet)
+
+        elif choice == 'Join':
+            curr_snippet = ui.join_snippets(curr_snippet, prev_snippet, next_snippet)
+
+        elif choice == 'Split':
+            pass
+
+        elif choice == 'Prefix':
+            prefix = ui.get_prefix()
+
 
     sub_keywords = term_extraction.get_keywords(sent_stripped, min_freq=1)
     sub_terms = term_extraction.get_terms(sent_stripped)

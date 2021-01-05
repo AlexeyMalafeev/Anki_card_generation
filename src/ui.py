@@ -55,8 +55,27 @@ def get_prefix() -> str:
     return prefix
 
 
+def join_snippets(
+        curr_snippet: str,
+        prev_snippet: str,
+        next_snippet: str,
+):
+    other_snippet = menu(
+        options=(
+            (f'with previous: {prev_snippet}', 'previous'),
+            (f'with next: {next_snippet}', 'next'),
+            ('go back', 'back'),
+        ),
+    )
+    if other_snippet == 'previous':
+        curr_snippet = f'{prev_snippet} {curr_snippet}'
+    elif other_snippet == 'next':
+        curr_snippet = f'{curr_snippet} {next_snippet}'
+    return curr_snippet
+
+
 def menu(
-        opt_list: tuple,  # of str or tuples: (str, obj)
+        options: tuple,  # of str or tuples: (str, any_other_obj)
         title: str = '',
         keys: str = '1234567890' + string.ascii_lowercase,
         new_line: bool = True
@@ -68,14 +87,14 @@ The option list is either a tuple of strings
 or a tuple of tuples (string, object),
 (then return the object matching the choice).
     """
-    if isinstance(opt_list[0], tuple) and len(opt_list[0]) == 2:
+    if isinstance(options[0], tuple) and len(options[0]) == 2:
         options = []
         returnables = []
-        for a, b in opt_list:
+        for a, b in options:
             options.append(a)
             returnables.append(b)
     else:
-        options = returnables = opt_list
+        options = returnables = options
     keys = keys[:len(options)]
     if title:
         print(title)
