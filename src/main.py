@@ -31,19 +31,18 @@ class MainFlow:
         ui.show_snippet(self.curr_snippet, self.prefix)
         snippet_lower = self.curr_snippet.lower()
         while True:
-            target = input('Input target word or phrase: ')
-            if target.lower() in snippet_lower:
+            target = input('Input target word or phrase: ').lower()
+            if target in snippet_lower:
                 break
         gap = card_generation.PHRASE_GAP if ' ' in target else card_generation.WORD_GAP
-        question = card_generation.make_gap(
+        question, orig_answer = card_generation.make_gap(
             text=self.curr_snippet,
             text_lower=snippet_lower,
             target=target,
             gap=gap
         )
-        answer = target
-        if ui.add_card_or_not(question, answer):
-            self.last_added.append((f'{self.prefix} {question}', answer))
+        if ui.add_card_or_not(question, orig_answer):
+            self.last_added.append((f'{self.prefix} {question}', orig_answer))
 
     def cards_control(self):
         # really big todo: distribute cards by multiple files 3q3a, 8q8a etc., use tabs
@@ -74,12 +73,9 @@ class MainFlow:
                 self.delete_card_by_idx()
             elif choice == 'Next snippet':
                 break
-        for card in self.last_added:
-            self.cards.append(card)
-
-    def clean_snippet(self):
-        self.curr_snippet = self.curr_snippet.replace('\t', ' ')
-        self.curr_snippet = self.curr_snippet.replace('\n', '<br>')
+        for question, answer in self.last_added:
+            question = text_processing.clean_text_for_anki_import(question)
+            self.cards.append((question, answer))
 
     def delete_card_by_idx(self):
         idx = ui.get_int(0, len(self.last_added) - 1)
@@ -114,7 +110,6 @@ class MainFlow:
             use_snippet = self.snippet_control()
 
             if use_snippet:
-                self.clean_snippet()
                 self.cards_control()
             if self.i == len(self.sentences):
                 break

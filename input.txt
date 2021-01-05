@@ -1,7 +1,3 @@
-UIMA enables applications to be decomposed into components, for example "language identification" = > "language specific segmentation" = > "sentence boundary detection" = > "entity detection (person/place names etc.)".
-Each component implements interfaces defined by the framework and provides self-describing metadata via XML descriptor files.
-The framework manages these components and the data flow between them.
-Components are written in Java or C++; the data that flows between components is designed for efficient mapping between these languages.
 UIMA additionally provides capabilities to wrap components as network services, and can scale to very large volumes by replicating processing pipelines over a cluster of networked nodes.
 Apache UIMA is an Apache-licensed open source implementation of the UIMA specification [pdf] [doc] (that specification is, in turn, being developed concurrently by a technical committee within OASIS , a standards organization).
 We invite and encourage you to participate in both the implementation and specification efforts.

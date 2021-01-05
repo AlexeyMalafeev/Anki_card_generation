@@ -28,30 +28,35 @@ def make_candidate_cards(snippet: str, prefix: str) -> tuple:
             (sub_terms, PHRASE_GAP)
     ):
         for keyword_or_term in keywords_or_terms:
-            question = make_gap(
+            question, orig_target = make_gap(
                 text=snippet,
                 text_lower=snippet_lower,
                 target=keyword_or_term,
                 gap=gap
             )
-            temp_cards.append((f'{prefix} {question}', keyword_or_term))
+            temp_cards.append((f'{prefix} {question}', orig_target))
     return tuple(temp_cards)
 
 
 def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> str:
-    matches = re.finditer(target, text_lower)
+    try:
+        matches = re.finditer(re.escape(target), text_lower)
+    except re.error:
+        print(f'{text = }, {target = }, {gap = }')
+        raise
     if target.endswith('s'):
         gap += 's'
     for match_obj in reversed(list(matches)):
         start, end = match_obj.span()
+        orig_target = text[start:end]
         text = text[:start] + gap + text[end:]
     try:
-        # Note: because of re exceptions, cannot use _____(?)
-        text = re.sub(f'(^| )a {WORD_GAP}', fr'\1a(n) {WORD_GAP}', text)
-        text = re.sub(f'(^| )an {WORD_GAP}', fr'\1a(n) {WORD_GAP}', text)
-        text = re.sub(f'(^| )A {WORD_GAP}', fr'\1A(n) {WORD_GAP}', text)
-        text = re.sub(f'(^| )An {WORD_GAP}', fr'\1A(n) {WORD_GAP}', text)
+        gap_escaped = re.escape(gap)
+        text = re.sub(f'(^| )a ' + gap_escaped, fr'\1a(n) ' + gap_escaped, text)
+        text = re.sub(f'(^| )an ' + gap_escaped, fr'\1a(n) ' + gap_escaped, text)
+        text = re.sub(f'(^| )A ' + gap_escaped, fr'\1A(n) ' + gap_escaped, text)
+        text = re.sub(f'(^| )An ' + gap_escaped, fr'\1A(n) ' + gap_escaped, text)
     except re.error:
         print(f'{text = }, {target = }, {gap = }')
         raise
-    return text
+    return text, orig_target
