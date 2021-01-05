@@ -27,6 +27,24 @@ class MainFlow:
 
         self.main_loop()
 
+    def add_manually(self):
+        ui.show_snippet(self.curr_snippet, self.prefix)
+        snippet_lower = self.curr_snippet.lower()
+        while True:
+            target = input('Input target word or phrase: ').lower()
+            if target in snippet_lower:
+                break
+        gap = card_generation.PHRASE_GAP if ' ' in target else card_generation.WORD_GAP
+        question = card_generation.make_gap(
+            text=self.curr_snippet,
+            text_lower=snippet_lower,
+            target=target,
+            gap=gap
+        )
+        answer = target
+        if ui.add_card_or_not(question, answer):
+            self.last_added.append((question, answer))
+
     def cards_control(self):
         # really big todo: distribute cards by multiple files 3q3a, 8q8a etc., use tabs
         # todo preview cards, delete some if necessary

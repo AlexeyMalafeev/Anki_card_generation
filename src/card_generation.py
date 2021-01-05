@@ -9,6 +9,8 @@ import ui
 ####################################################################################################
 
 MIN_SENT_LENGTH = 50
+PHRASE_GAP = '_____(?)'
+WORD_GAP = '_____'
 
 ####################################################################################################
 # Functions
@@ -22,8 +24,8 @@ def make_candidate_cards(snippet: str, prefix: str) -> tuple:
     snippet_lower = snippet.lower()
 
     for keywords_or_terms, gap in (
-            (sub_keywords, '_____'),
-            (sub_terms, '_____(?)')
+            (sub_keywords, WORD_GAP),
+            (sub_terms, PHRASE_GAP)
     ):
         for keyword_or_term in keywords_or_terms:
             question = make_gap(
@@ -36,7 +38,7 @@ def make_candidate_cards(snippet: str, prefix: str) -> tuple:
     return tuple(temp_cards)
 
 
-def make_gap(text: str, text_lower: str, target: str, gap: str = '_____') -> str:
+def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> str:
     matches = re.finditer(target, text_lower)
     if target.endswith('s'):
         gap += 's'
