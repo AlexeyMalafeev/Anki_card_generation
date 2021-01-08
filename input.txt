@@ -1,11 +1,3 @@
-UIMA additionally provides capabilities to wrap components as network services, and can scale to very large volumes by replicating processing pipelines over a cluster of networked nodes.
-Apache UIMA is an Apache-licensed open source implementation of the UIMA specification [pdf] [doc] (that specification is, in turn, being developed concurrently by a technical committee within OASIS , a standards organization).
-We invite and encourage you to participate in both the implementation and specification efforts.
-Here you can find:
-Frameworks
-Components, and
-Infrastructure,
-all licensed under the Apache license.
 The dashed-line boxes above are placeholders for possible future additions.
 The Frameworks run the components, and are available for both Java and C++.
 The Java Framework supports running both Java and non-Java components (using the C++ framework).
@@ -56,3 +48,4 @@ Another important use case is business or government intelligence.
 For example, UIMA analysis is used to extract structured information from car repair reports.
 This data is then used for quality feed-back and problem early warning systems.
 Other possible solutions where UIMA can be used for are the analsyis of call center notes to detect product problems and customer issues or a public image monitoring solution to find out how others for example in internet forums or press releases think about my product or company.
+

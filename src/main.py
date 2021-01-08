@@ -25,6 +25,12 @@ class MainFlow:
         self.next_snippet = ''
         self.i = 0
 
+        self.cards_path = Path('..', 'new_cards.txt')
+        self.cards_path.write_text('', encoding='utf-8')
+        self.editing_path = Path('..', 'snippets_for_editing.txt')
+        self.editing_path.write_text('', encoding='utf-8')
+        self.remaining_path = Path('..', 'input.txt')
+
         self.main_loop()
 
     def add_manually(self):
@@ -117,21 +123,24 @@ class MainFlow:
         print('All done')
 
     def save(self):
-        cards_path = Path('..', 'new_cards.txt')
         cards_lines = [f'{q}\t{a}' for q, a in self.cards]
-        cards_text = '\n'.join(cards_lines)
-        cards_path.write_text(cards_text, encoding='utf-8')
+        cards_text = '\n'.join(cards_lines) + '\n'
+        with open(self.cards_path, 'a', encoding='utf-8') as cards_out:
+            cards_out.write(cards_text)
 
-        editing_path = Path('..', 'snippets_for_editing.txt')
-        editing_path.write_text('\n'.join(self.snippets_for_editing), encoding='utf-8')
+        snippets_text = '\n'.join(self.snippets_for_editing) + '\n'
+        with open(self.editing_path, 'a', encoding='utf-8') as editing_out:
+            editing_out.write(snippets_text)
 
-        remaining_path = Path('..', 'input.txt')
-        remaining_path.write_text('\n'.join(self.sentences[self.i:]), encoding='utf-8')
+        remaining_text = '\n'.join(self.sentences[self.i:]) + '\n'
+        with open(self.remaining_path, 'w', encoding='utf-8') as remaining_out:
+            remaining_out.write(remaining_text)
 
         print('Saved')
 
     def snippet_control(self):
         # todo add option to edit snippet right now (replace)
+        # todo in editing menu, also add input new snippet, remove prefix
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
             choice = ui.menu(
