@@ -73,7 +73,7 @@ If key is pressed, return its string; if no key is pressed, return 0
 
 def get_prefix() -> str:
     prefix = input('\nChoose a prefix: ')
-    if not prefix.endswith(':'):
+    if prefix and not prefix.endswith(':'):
         prefix += ':'
     return prefix
 

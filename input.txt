@@ -1,17 +1,26 @@
-What Can UIMA Be Used For
-UIMA
-is, by itself, an empty framework.
-Its purpose is to enable a world-wide, diverse community to develop inter-operable, often complex analytic components, and allow them to be combined and run together, with framework supplied scaled-out and remoting as needed.
-Some of the major external UIMA resources are linked on the Apache UIMA website "UIMA Resources on the Web".
-You can also check the UIMA Addons and Sandbox for components that can be used and combined to build your own application.
-There are lots of use cases where UIMA may be applicable.
-One of the major ones are search applications.
-Within search applications, the unstructured content that is available mainly as text in various kinds must be processed and analyzed to be searchable.
-To obtain a powerful search application, the text content must be analyzed to get the document language followed by language dependent linguistic processing such as tokenization, lemmatization and part of speech detection.
-After these steps a more sophisticated analysis like entity detection and relation detection between entities can be done.
-For all these analysis steps UIMA and UIMA components can be used.
-Another important use case is business or government intelligence.
-For example, UIMA analysis is used to extract structured information from car repair reports.
-This data is then used for quality feed-back and problem early warning systems.
-Other possible solutions where UIMA can be used for are the analsyis of call center notes to detect product problems and customer issues or a public image monitoring solution to find out how others for example in internet forums or press releases think about my product or company.
+A jump server, jump host or jump box is a system on a network used to access and manage devices in a separate security zone.
+A jump server is a hardened and monitored device that spans two dissimilar security zones and provides a controlled means of access between them.
+The most common example is managing a host in a DMZ from trusted networks or computers.
+In computing, hardening is usually the process of securing a system by reducing its surface of vulnerability, which is larger when a system performs more functions; in principle a single-function system is more secure than a multipurpose one.
+Reducing available ways of attack typically includes changing default passwords, the removal of unnecessary software, unnecessary usernames or logins, and the disabling or removal of unnecessary services.
+In computer security, a DMZ or demilitarized zone (sometimes referred to as a perimeter network or screened subnet) is a physical or logical subnetwork that contains and exposes an organization's external-facing services to an untrusted, usually larger, network such as the Internet.
+The purpose of a DMZ is to add an additional layer of security to an organization's local area network (LAN):
+an external network node can access only what is exposed in the DMZ, while the rest of the organization's network is firewalled.
+The DMZ functions as a small, isolated network positioned between the Internet and the private network and, if its design is effective, allows the organization extra time to detect and address breaches before they would further penetrate into the internal networks.
+In computer programming, assembly language (or assembler language),[1] often abbreviated asm, is any low-level programming language in which there is a very strong correspondence between the instructions in the language and the architecture's machine code instructions.[2] Because assembly depends on the machine code instructions, every assembly language is designed for exactly one specific computer architecture.
+Assembly language may also be called symbolic machine code.[3][4]
+Assembly code is converted into executable machine code by a utility program referred to as an assembler.
+The conversion process is referred to as assembly, as in assembling the source code.
+Assembly language usually has one statement per machine instruction (1:1), but comments and statements that are assembler
+directives,[5] macros,[6][1] and symbolic labels of program and memory locations are often also supported.
+The term "assembler" is generally attributed to Wilkes, Wheeler and Gill in their 1951 book
+The preparation of programs for an electronic digital computer,[7] who, however, used the term to mean "a program that assembles another program consisting of several sections into a single program".[8]
+
+Each assembly language is specific to a particular computer architecture and sometimes to an operating system.[9]
+However, some assembly languages do not provide specific syntax for operating system calls, and most assembly languages can be used universally with any operating system, as the language provides access to all the real capabilities of the processor, upon which all system call mechanisms ultimately rest.
+In contrast to assembly languages, most high-level programming languages are generally portable across multiple architectures but require interpreting or compiling, a much more complicated task than assembling.
+The computational step when an assembler is processing a program is called assembly time.
+In computer programming and software design, code refactoring is the process of restructuring existing computer code—changing the factoring—without changing its external behavior.
+Refactoring is intended to improve the design, structure, and/or implementation of the software (its non-functional attributes), while preserving its functionality.
+Potential advantages of refactoring may include improved code readability and reduced complexity; these can improve the source code's maintainability and create a simpler, cleaner, or more expressive internal architecture or object model to improve extensibility.
 

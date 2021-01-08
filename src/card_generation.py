@@ -20,7 +20,8 @@ def make_candidate_cards(snippet: str, prefix: str) -> tuple:
     sub_terms = term_extraction.get_terms(snippet)
     temp_cards = []
     snippet_lower = snippet.lower()
-
+    if prefix:
+        prefix += ' '
     for keywords_or_terms, gap in (
             (sub_keywords, WORD_GAP),
             (sub_terms, PHRASE_GAP)
@@ -32,7 +33,7 @@ def make_candidate_cards(snippet: str, prefix: str) -> tuple:
                 target=keyword_or_term,
                 gap=gap
             )
-            temp_cards.append((f'{prefix} {question}', orig_target))
+            temp_cards.append((f'{prefix}{question}', orig_target))
     return tuple(temp_cards)
 
 
