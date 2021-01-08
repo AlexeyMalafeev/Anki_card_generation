@@ -111,7 +111,10 @@ class MainFlow:
         while True:
             self.curr_snippet = self.sentences[self.i]
             self.prev_snippet = self.sentences[self.i - 1]
-            self.next_snippet = self.sentences[self.i + 1]
+            try:
+                self.next_snippet = self.sentences[self.i + 1]
+            except IndexError:
+                break
 
             use_snippet = self.snippet_control()
 
@@ -119,10 +122,11 @@ class MainFlow:
                 self.cards_control()
             if self.i == len(self.sentences):
                 break
+            self.save(silent=True)
         self.save()
         print('All done')
 
-    def save(self):
+    def save(self, silent=False):
         cards_lines = [f'{q}\t{a}' for q, a in self.cards]
         cards_text = '\n'.join(cards_lines) + '\n'
         with open(self.cards_path, 'a', encoding='utf-8') as cards_out:
@@ -138,7 +142,8 @@ class MainFlow:
         with open(self.remaining_path, 'w', encoding='utf-8') as remaining_out:
             remaining_out.write(remaining_text)
 
-        print('Saved')
+        if not silent:
+            print('Saved')
 
     def snippet_control(self):
         # todo add option to edit snippet right now (replace)
