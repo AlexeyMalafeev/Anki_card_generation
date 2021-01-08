@@ -160,4 +160,4 @@ def split_snippets(
 
 
 def yn(message: str) -> str or object:
-    return menu((('yes', True), ('no', False)), message)
+    return menu((('yes', True), ('no', False)), message, 'yn')

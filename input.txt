@@ -1,22 +1,3 @@
-The UIMA-AS supports very flexible scaleout capability based on JMS (Java Messaging Services) and ActiveMQ.
-Scale out is a growth architecture or method that focuses on horizontal growth, or the addition of new resources instead of increasing the capacity of current resources (known as scaling up).
-The UIMA-DUCC extends UIMA-AS by providing cluster management services to automate the scale-out of UIMA pipelines over computing clusters.
-Visit the UIMA-DUCC live demo description and the UIMA-DUCC live demo itself.
-The frameworks support configuring and running pipelines of Annotator components.
-These components do the actual work of analyzing the unstructured information.
-Users can write their own annotators, or configure and use pre-existing annotators.
-Some annotators are available as part of this project; others are contained in various repositories on the internet.
-GitHub.com lists over 900 repositories that have dependencies on the UIMA Java SDK core.
-In 2018, the internals of the UIMA Java framework were redesigned for a tighter integration with Java including for example, Java Streams support for working with annotations, and for supporting higher performance on modern processors with memory caches.
-This is available as Version 3.x.x of the UIMA Java SDK, and associated components.
-Version 2 continues to be supported, but new work should use version 3.
-An extensive rule-based scripting language (RUTA), an associated analysis engine built on top of UIMA, and an Eclipse-based tooling workbench for interactively developing and testing the rules, is part of this project.
-Additional infrastructure support components include a simple server that can receive REST requests and return annotation results, for use by other web services.
-The Addons and Sandbox is for Addons (Annotators and other things) for UIMA, and a place where new ideas are developed for potential incorporation into the project.
-Getting Started:
-Why UIMA
-The "Getting Started: Why UIMA" guide should help you to understand what UIMA™ is, what it can be used for, and how you can use it.
-What Is UIMA
 UIMA stands for Unstructured Information Management Architecture and is a component architecture and software framework implementation for the analysis of unstructured content like text, video and audio data.
 Unstructured information represents the largest, most current and fastest growing source of information available to businesses and governments.
 The motivation to develop such a framework was to build a common platform for unstructured analytics, to foster reuse of analysis components and to reduce duplication of analysis development.
