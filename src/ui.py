@@ -137,7 +137,9 @@ or a tuple of tuples (string, object),
 
 def show_snippet(snippet: str, prefix: str) -> None:
     cls()
-    print(f'Candidate snippet:\n{prefix} {snippet}')
+    if prefix:
+        prefix += ' '
+    print(f'Candidate snippet:\n{prefix}{snippet}')
 
 
 def show_text_preview(text: str, first_k_chars: int = 500) -> None:
