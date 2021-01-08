@@ -1,9 +1,5 @@
-The dashed-line boxes above are placeholders for possible future additions.
-The Frameworks run the components, and are available for both Java and C++.
-The Java Framework supports running both Java and non-Java components (using the C++ framework).
-The C++ framework, besides supporting annotators written in C/C++, also supports Perl, Python, and TCL annotators.
-The UIMA-AS and UIMA-DUCC are both Scaleout Frameworks and are addons to the base Java framework.
 The UIMA-AS supports very flexible scaleout capability based on JMS (Java Messaging Services) and ActiveMQ.
+Scale out is a growth architecture or method that focuses on horizontal growth, or the addition of new resources instead of increasing the capacity of current resources (known as scaling up).
 The UIMA-DUCC extends UIMA-AS by providing cluster management services to automate the scale-out of UIMA pipelines over computing clusters.
 Visit the UIMA-DUCC live demo description and the UIMA-DUCC live demo itself.
 The frameworks support configuring and running pipelines of Annotator components.

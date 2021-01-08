@@ -127,10 +127,12 @@ class MainFlow:
         cards_text = '\n'.join(cards_lines) + '\n'
         with open(self.cards_path, 'a', encoding='utf-8') as cards_out:
             cards_out.write(cards_text)
+        self.cards = []
 
         snippets_text = '\n'.join(self.snippets_for_editing) + '\n'
         with open(self.editing_path, 'a', encoding='utf-8') as editing_out:
             editing_out.write(snippets_text)
+        self.snippets_for_editing = []
 
         remaining_text = '\n'.join(self.sentences[self.i:]) + '\n'
         with open(self.remaining_path, 'w', encoding='utf-8') as remaining_out:
