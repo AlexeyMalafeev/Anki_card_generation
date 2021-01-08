@@ -43,6 +43,7 @@ def add_card_or_not(question, answer):
     print(question)
     print('-' * 50)
     print(answer)
+    # todo optionally change gap
     return yn('\nOk?')
 
 

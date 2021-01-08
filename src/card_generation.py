@@ -45,6 +45,16 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
         raise
     if target.endswith('s'):
         gap += 's'
+    elif target.endswith('ed'):
+        gap += 'ed'
+    elif target.endswith('ly'):
+        gap += 'ly'
+    elif target.endswith('tion'):
+        gap += 'tion'
+    elif target.endswith('able'):
+        gap += 'able'
+    elif target.endswith('ing'):
+        gap += 'ing'
     for match_obj in reversed(list(matches)):
         start, end = match_obj.span()
         orig_target = text[start:end]
@@ -59,10 +69,3 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
         print(f'{text = }, {target = }, {gap = }')
         raise
     return text, orig_target
-res = make_gap(
-    text='Scale out is a growth architecture',
-    text_lower='scale out is a growth architecture',
-    target='growth architecture',
-    gap=PHRASE_GAP,
-)
-print(res)
