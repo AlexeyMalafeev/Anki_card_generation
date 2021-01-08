@@ -26,6 +26,9 @@ class MainFlow:
         self.i = 0
 
         self.cards_path = Path('..', 'new_cards.txt')
+        backup_text = self.cards_path.read_text(encoding='utf-8')
+        self.backup_path = Path('..', 'new_cards_backup.txt')
+        self.backup_path.write_text(backup_text, encoding='utf-8')
         self.cards_path.write_text('', encoding='utf-8')
         self.editing_path = Path('..', 'snippets_for_editing.txt')
         self.editing_path.write_text('', encoding='utf-8')
