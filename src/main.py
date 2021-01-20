@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
 
+import anki_connect
 import card_generation
 import text_processing
 import ui
@@ -17,6 +18,8 @@ class MainFlow:
         self.sentences = text_processing.get_sentences(input_text)
         self.sentences = ('',) + self.sentences + ('',)
         self.cards = []  # of tuples: (question_str, answer_str)
+        self.notes = []
+        self.current_note = []
         self.last_added = []  # of tuples: (question_str, answer_str)
         self.snippets_for_editing = []
 
@@ -54,7 +57,6 @@ class MainFlow:
             self.last_added.append((f'{self.prefix} {question}', orig_answer))
 
     def cards_control(self):
-        # really big todo: distribute cards by multiple files 3q3a, 8q8a etc., use tabs
         # todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
         self.last_added = []
@@ -83,8 +85,9 @@ class MainFlow:
             elif choice == 'Next snippet':
                 break
         for question, answer in self.last_added:
-            question = text_processing.clean_text_for_anki_import(question)
-            self.cards.append((question, answer))
+            question_cleaned = text_processing.clean_text_for_anki_import(question)
+            self.cards.append((question_cleaned, answer))
+            self.current_note.extend([question, answer])
 
     def delete_card_by_idx(self):
         idx = ui.get_int(0, len(self.last_added) - 1)
@@ -130,6 +133,17 @@ class MainFlow:
         print('All done')
 
     def save(self, silent=False):
+        if self.current_note:
+            self.notes.append(tuple(self.current_note))
+            self.current_note = []
+        anki_connect.make_notes(
+            tuple(self.notes),
+            deck_name='experimental',
+            print_notes=True,
+            add_to_anki=True,
+        )
+        self.notes = []
+
         cards_lines = [f'{q}\t{a}' for q, a in self.cards]
         cards_text = '\n'.join(cards_lines) + '\n'
         with open(self.cards_path, 'a', encoding='utf-8') as cards_out:
@@ -153,11 +167,13 @@ class MainFlow:
         # todo in editing menu, also add input new snippet, remove prefix
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
+            new_note_text = f'New note (current: {len(self.current_note)} cards)'
             choice = ui.menu(
                 options=(
                     'Cards',
+                    new_note_text,
                     'Next',
-                    'Edit',
+                    'Edit manually later',
                     'Join',
                     'Split',
                     'Prefix',
@@ -165,18 +181,22 @@ class MainFlow:
                     'Save and exit',
                     'Quit',
                 ),
-                keys='cnejspSEQ',
+                keys='cNnejspSEQ',
             )
 
             if choice == 'Cards':
                 self.i += 1
                 return True
 
+            elif choice == new_note_text:
+                self.notes.append(tuple(self.current_note))
+                self.current_note = []
+
             elif choice == 'Next':
                 self.i += 1
                 return False
 
-            elif choice == 'Edit':
+            elif choice == 'Edit manually later':
                 self.snippets_for_editing.append(self.curr_snippet)
                 self.i += 1
                 return False

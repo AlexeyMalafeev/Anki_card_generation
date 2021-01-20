@@ -6,10 +6,6 @@ import urllib.request
 MAX_NUM_QUESTIONS_PER_NOTE = 35
 
 
-def _make_note():
-    pass
-
-
 def _request(action, **params):
     return {'action': action, 'params': params, 'version': 6}
 
@@ -38,7 +34,7 @@ def main():
 
 
 def make_notes(
-        fields_nested: tuple,  # of tuples
+        fields_nested: tuple or list,  # of tuples or lists
         deck_name: str = 'experimental',
         print_notes: bool = False,
         add_to_anki: bool = True,
