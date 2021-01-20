@@ -1,5 +1,9 @@
 import json
+from pprint import pprint
 import urllib.request
+
+
+MAX_NUM_QUESTIONS_PER_NOTE = 35
 
 
 def _make_note():
@@ -30,7 +34,55 @@ def anki_invoke(action, **params):
 
 
 def main():
-    test()
+    make_notes_test()
+
+
+def make_notes(
+        fields_nested: tuple,  # of tuples
+        deck_name: str = 'experimental',
+        print_notes: bool = False,
+        add_to_anki: bool = True,
+):
+    notes = []
+    for fields in fields_nested:
+        note = {'deckName': deck_name}
+        n_fields = len(fields)
+        assert n_fields > 0, f'number of fields must be > 0 in \n{fields = }'
+        assert n_fields % 2 == 0, f'number of fields must be even in \n{fields = }'
+
+        # determine model
+        n_questions = n_fields // 2
+        assert n_questions <= MAX_NUM_QUESTIONS_PER_NOTE, \
+            f'number of questions ({n_questions}) must not exceed {MAX_NUM_QUESTIONS_PER_NOTE}'
+        note['modelName'] = f'theory, {n_questions}q {n_questions}a'
+
+        # map fields
+        fields_mapping = {}
+        for i in range(0, n_fields, 2):
+            q = fields[i]
+            a = fields[i + 1]
+            n = i // 2 + 1
+            fields_mapping[f'{n}q'] = q
+            fields_mapping[f'{n}a'] = a
+        note['fields'] = fields_mapping
+
+        notes.append(note)
+
+        if print_notes:
+            pprint(note)
+
+    # add all notes
+    if add_to_anki:
+        pass
+
+
+def make_notes_test():
+    fields = (
+        ('question 1', 'answer 1', 'question 2', 'answer 2'),
+        ('question 1', 'answer 1', 'question 2', 'answer 2', 'question 3', 'answer 3'),
+        ('question 1', 'answer 1'),
+    )
+    make_notes(fields, deck_name='TEST', print_notes=True, add_to_anki=False)
 
 
 def test():
