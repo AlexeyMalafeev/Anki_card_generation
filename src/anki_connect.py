@@ -73,7 +73,8 @@ def make_notes(
 
     # add all notes
     if add_to_anki:
-        pass
+        response = anki_invoke('addNotes', notes=notes)
+        print(response)
 
 
 def make_notes_test():
@@ -82,6 +83,7 @@ def make_notes_test():
         ('question 1', 'answer 1', 'question 2', 'answer 2', 'question 3', 'answer 3'),
         ('question 1', 'answer 1'),
     )
+    # make_notes(fields, deck_name='experimental', print_notes=True, add_to_anki=True)
     make_notes(fields, deck_name='TEST', print_notes=True, add_to_anki=False)
 
 
