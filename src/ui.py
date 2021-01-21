@@ -88,25 +88,21 @@ def get_prefix() -> str:
 
 
 def join_snippets(
-        curr_snippet: str,
         prev_snippet: str,
         next_snippet: str,
 ) -> tuple:
-    other_snippet = menu(
-        options=(
-            (f'with previous: {prev_snippet}', 'previous'),
-            (f'with next: {next_snippet}', 'next'),
-            ('go back', 'back'),
-        ),
+    options = []
+    if prev_snippet:
+        options.append((f'with previous: {prev_snippet}', -1))
+    if next_snippet:
+        options.append((f'with next: {next_snippet}', 1))
+    options.append(('go back', 0))
+    options = tuple(options)
+    choice = menu(
+        options=options,
         title='Join'
     )
-    if other_snippet == 'previous':
-        curr_snippet = f'{prev_snippet} {curr_snippet}'
-        prev_snippet = ''
-    elif other_snippet == 'next':
-        curr_snippet = f'{curr_snippet} {next_snippet}'
-        next_snippet = ''
-    return prev_snippet, curr_snippet, next_snippet
+    return choice
 
 
 def menu(

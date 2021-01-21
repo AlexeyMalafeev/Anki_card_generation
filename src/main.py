@@ -7,6 +7,7 @@ import text_processing
 import ui
 
 # todo add statistics
+# todo split doesn't work
 
 
 class MainFlow:
@@ -120,15 +121,15 @@ class MainFlow:
         self.set_snippets()
 
     def join_snippets(self):
-        self.prev_snippet, self.curr_snippet, self.next_snippet = ui.join_snippets(
-            curr_snippet=self.curr_snippet,
+        choice = ui.join_snippets(
             prev_snippet=self.prev_snippet,
             next_snippet=self.next_snippet,
-        )
-        if not self.prev_snippet:
+        )  # choice in {-1, 0, 1}
+        if choice == -1:
             self.sentences = (self.sentences[:max(self.i - 1, 1)] +
                               (self.curr_snippet, ) +
                               self.sentences[self.i + 1:])
+            self.i -= 1
             self.set_snippets()
         if not self.next_snippet:
             self.sentences = (self.sentences[:self.i] +
@@ -201,6 +202,7 @@ class MainFlow:
     def snippet_control(self):
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
+            print(f'snippet {self.i} / {len(self.sentences) - 2}')
             new_note_text = f'New note (current: {len(self.current_note) // 2} cards)'
             choice = ui.menu(
                 options=(
