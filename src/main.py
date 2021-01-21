@@ -97,9 +97,7 @@ class MainFlow:
 
     def edit_snippet(self):
         new_snippet = ui.get_edited_snippet(self.curr_snippet, self.prefix)
-        self.curr_snippet = new_snippet
-        self.sentences = (self.sentences[:self.i] + (self.curr_snippet, ) +
-                          self.sentences[self.i + 1:])
+        self.sentences = (self.sentences[:self.i] + (new_snippet, ) + self.sentences[self.i + 1:])
 
     def join_snippets(self):
         self.prev_snippet, self.curr_snippet, self.next_snippet = ui.join_snippets(
@@ -119,12 +117,13 @@ class MainFlow:
             self.next_snippet = self.sentences[self.i + 1]
 
     def main_loop(self):
+        format_func = text_processing.format_snippet_for_anki
         self.i = 1
         while True:
-            self.curr_snippet = self.sentences[self.i]
-            self.prev_snippet = self.sentences[self.i - 1]
+            self.curr_snippet = format_func(self.sentences[self.i])
+            self.prev_snippet = format_func(self.sentences[self.i - 1])
             try:
-                self.next_snippet = self.sentences[self.i + 1]
+                self.next_snippet = format_func(self.sentences[self.i + 1])
             except IndexError:
                 break
 
@@ -229,8 +228,6 @@ class MainFlow:
     def split_snippets(self):
         first, second = ui.split_snippets(self.curr_snippet, self.prefix)
         if second:
-            self.curr_snippet = first
-            self.next_snippet = second
             self.sentences = (self.sentences[:self.i] +
                               (self.curr_snippet, self.next_snippet) +
                               self.sentences[self.i + 1:])
