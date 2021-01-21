@@ -38,11 +38,7 @@ getch_inst = Getch()
 
 
 def add_card_or_not(question, answer):
-    cls()
-    print('Candidate card:\n')
-    print(question)
-    print('-' * 50)
-    print(answer)
+    preview_card(question, answer)
     # low-priority todo optionally change gap
     return yn('\nOk?')
 
@@ -147,6 +143,14 @@ or a tuple of tuples (string, object),
         choice = get_key()
         if choice in keys:
             return returnables[keys.index(choice)]  # low-priority todo small inefficiency
+
+
+def preview_card(question, answer):
+    cls()
+    print('Candidate card:\n')
+    print(question)
+    print('-' * 50)
+    print(answer)
 
 
 def show_snippet(snippet: str, prefix: str) -> None:
