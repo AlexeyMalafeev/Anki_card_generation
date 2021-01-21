@@ -153,7 +153,7 @@ def show_snippet(snippet: str, prefix: str) -> None:
     cls()
     if prefix:
         prefix += ' '
-    print(f'Candidate snippet:\n{prefix}{snippet}')
+    print(f' Candidate snippet:\n\n{prefix}{snippet}')
 
 
 def show_text_preview(text: str, first_k_chars: int = 500) -> None:
@@ -166,7 +166,7 @@ def split_snippets(
         prefix: str
 ) -> tuple:
     show_snippet(snippet, prefix)
-    substr = input('Input a word or phrase that starts a new snippet: ')
+    substr = input('\nInput a word or phrase that starts a new snippet: ')
     if (idx := snippet.find(substr)) != -1:
         first, second = snippet[:idx].rstrip(), snippet[idx:].lstrip()
         print(f'Snippet 1: {prefix}{first}\n----------\nSnippet 2: {prefix}{second}')

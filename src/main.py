@@ -127,13 +127,13 @@ class MainFlow:
         )  # choice in {-1, 0, 1}
         if choice == -1:
             self.sentences = (self.sentences[:max(self.i - 1, 1)] +
-                              (self.curr_snippet, ) +
+                              (f'{self.prev_snippet} {self.curr_snippet}', ) +
                               self.sentences[self.i + 1:])
             self.i -= 1
             self.set_snippets()
-        if not self.next_snippet:
+        elif choice == 1:
             self.sentences = (self.sentences[:self.i] +
-                              (self.curr_snippet, ) +
+                              (f'{self.curr_snippet} {self.next_snippet}', ) +
                               self.sentences[min(self.i + 2, len(self.sentences) - 1):])
             self.set_snippets()
 
@@ -202,7 +202,7 @@ class MainFlow:
     def snippet_control(self):
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
-            print(f'snippet {self.i} / {len(self.sentences) - 2}')
+            print(f'\n snippet {self.i} / {len(self.sentences) - 2}\n')
             new_note_text = f'New note (current: {len(self.current_note) // 2} cards)'
             choice = ui.menu(
                 options=(
@@ -258,7 +258,7 @@ class MainFlow:
         first, second = ui.split_snippets(self.curr_snippet, self.prefix)
         if second:
             self.sentences = (self.sentences[:self.i] +
-                              (self.curr_snippet, self.next_snippet) +
+                              (first, second) +
                               self.sentences[self.i + 1:])
             self.set_snippets()
 
