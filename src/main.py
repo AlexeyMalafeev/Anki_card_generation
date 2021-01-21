@@ -206,7 +206,7 @@ class MainFlow:
                 options=(
                     'Cards',
                     new_note_text,
-                    'Next',
+                    'Skip',
                     'Edit',
                     'Join',
                     'Split',
@@ -215,7 +215,7 @@ class MainFlow:
                     'Save and exit',
                     'Quit',
                 ),
-                keys='cNnejspSEQ',
+                keys='cnsejspSEQ',
             )
 
             if choice == 'Cards':
@@ -226,7 +226,7 @@ class MainFlow:
                 self.notes.append(tuple(self.current_note))
                 self.current_note = []
 
-            elif choice == 'Next':
+            elif choice == 'Skip':
                 self.i += 1
                 return False
 
