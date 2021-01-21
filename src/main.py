@@ -133,9 +133,11 @@ class MainFlow:
         print('All done')
 
     def save(self, silent=False):
+        # todo notes shouldn't be always saved automatically!
         if self.current_note:
             self.notes.append(tuple(self.current_note))
             self.current_note = []
+        # todo only if notes is not empty
         anki_connect.make_notes(
             tuple(self.notes),
             deck_name='experimental',
@@ -163,7 +165,7 @@ class MainFlow:
             print('Saved')
 
     def snippet_control(self):
-        # todo add option to edit snippet right now (replace)
+        # todo add option to edit snippet right now (replace etc.)
         # todo in editing menu, also add input new snippet, remove prefix
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)

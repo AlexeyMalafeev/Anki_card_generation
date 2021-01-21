@@ -11,7 +11,13 @@ def get_sentences(text: str) -> tuple:
     sentences = []
     doc = nlp(text)
     for sent in doc.sents:
-        if not (sent_stripped := sent.text.strip()):
+        if sent.text.isspace():
             continue
-        sentences.append(sent_stripped)
+        sent_processed = sent.text.strip()
+        first = sent[0]
+        if first.text.istitle() and not first.ent_type_:
+            sent_processed = sent_processed[0].lower() + sent_processed[1:]
+        if sent_processed.endswith('.'):
+            sent_processed = sent_processed[:-1]
+        sentences.append(sent_processed)
     return tuple(sentences)
