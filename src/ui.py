@@ -52,7 +52,11 @@ def cls():
 
 
 def get_edited_snippet(curr_snippet, prefix):
-    raise NotImplementedError
+    show_snippet(curr_snippet, prefix)
+    input_new_snippet_prompt = 'Input new snippet:\n'
+    while (new_snippet := input(input_new_snippet_prompt)) == '':
+        print('New snippet cannot be empty!')
+    return new_snippet
 
 
 def get_int(a: int, b: int) -> int:
