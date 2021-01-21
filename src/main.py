@@ -6,6 +6,8 @@ import card_generation
 import text_processing
 import ui
 
+# todo add statistics
+
 
 class MainFlow:
 
@@ -50,8 +52,9 @@ class MainFlow:
             target=target,
             gap=gap
         )
-        if ui.add_card_or_not(question, orig_answer):
-            self.last_added.append((f'{self.prefix}{question}', orig_answer))
+        cand_card = (f'{self.prefix}{question}', orig_answer)
+        if cand_card not in self.last_added:
+            self.last_added.append(cand_card)
 
     def auto_save(self):
         self._save(send_to_anki=False, show_message=False)
