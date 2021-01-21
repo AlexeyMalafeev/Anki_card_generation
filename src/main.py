@@ -204,7 +204,7 @@ class MainFlow:
             new_note_text = f'New note (current: {len(self.current_note) // 2} cards)'
             choice = ui.menu(
                 options=(
-                    'Cards',
+                    'Add cards',
                     new_note_text,
                     'Skip',
                     'Edit',
@@ -215,10 +215,10 @@ class MainFlow:
                     'Save and exit',
                     'Quit',
                 ),
-                keys='cnsejspSEQ',
+                keys='ansej2pSEQ',
             )
 
-            if choice == 'Cards':
+            if choice == 'Add cards':
                 self.i += 1
                 return True
 
