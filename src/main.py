@@ -151,7 +151,7 @@ class MainFlow:
                 anki_connect.make_notes(
                     tuple(self.notes),
                     deck_name='experimental',
-                    print_notes=True,
+                    print_notes=False,
                     add_to_anki=True,
                 )
                 self.notes = []
