@@ -93,7 +93,10 @@ class MainFlow:
             self.last_added = self.last_added[:idx] + self.last_added[idx + 1:]
 
     def edit_snippet(self):
-        pass
+        new_snippet = ui.get_edited_snippet(self.curr_snippet, self.prefix)
+        self.curr_snippet = new_snippet
+        self.sentences = (self.sentences[:self.i] + (self.curr_snippet, ) +
+                          self.sentences[self.i + 1:])
 
     def join_snippets(self):
         self.prev_snippet, self.curr_snippet, self.next_snippet = ui.join_snippets(
@@ -197,7 +200,7 @@ class MainFlow:
                 return False
 
             elif choice == 'Edit':
-                raise NotImplementedError  # todo
+                self.edit_snippet()
 
             elif choice == 'Join':
                 self.join_snippets()
