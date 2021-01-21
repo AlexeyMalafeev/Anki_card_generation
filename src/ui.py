@@ -52,7 +52,7 @@ def cls():
 
 
 def get_edited_snippet(curr_snippet, prefix):
-    raise NotImplementedError  # todo
+    raise NotImplementedError
 
 
 def get_int(a: int, b: int) -> int:
@@ -164,7 +164,7 @@ def split_snippets(
     substr = input('Input a word or phrase that starts a new snippet: ')
     if (idx := snippet.find(substr)) != -1:
         first, second = snippet[:idx].rstrip(), snippet[idx:].lstrip()
-        print(f'Snippet 1: {prefix} {first}\n----------\nSnippet 2: {prefix} {second}')
+        print(f'Snippet 1: {prefix}{first}\n----------\nSnippet 2: {prefix}{second}')
         if yn('Is this ok?'):
             return first, second
     else:

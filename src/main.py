@@ -51,7 +51,7 @@ class MainFlow:
             gap=gap
         )
         if ui.add_card_or_not(question, orig_answer):
-            self.last_added.append((f'{self.prefix} {question}', orig_answer))
+            self.last_added.append((f'{self.prefix}{question}', orig_answer))
 
     def cards_control(self):
         # todo save and exit
