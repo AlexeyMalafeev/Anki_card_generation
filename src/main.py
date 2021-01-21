@@ -182,7 +182,7 @@ class MainFlow:
     def snippet_control(self):
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
-            new_note_text = f'New note (current: {len(self.current_note)} cards)'
+            new_note_text = f'New note (current: {len(self.current_note) // 2} cards)'
             choice = ui.menu(
                 options=(
                     'Cards',
