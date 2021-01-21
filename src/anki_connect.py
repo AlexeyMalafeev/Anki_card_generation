@@ -6,12 +6,8 @@ import urllib.request
 MAX_NUM_QUESTIONS_PER_NOTE = 35
 
 
-def _request(action, **params):
-    return {'action': action, 'params': params, 'version': 6}
-
-
 def anki_invoke(action, **params):
-    print(f'to Anki: {action} with {params}')
+    # print(f'to Anki: {action} with {params}')
     request_json = json.dumps(_request(action, **params)).encode('utf-8')
     response = json.load(
         urllib.request.urlopen(
@@ -81,6 +77,10 @@ def make_notes_test():
     )
     # make_notes(fields, deck_name='experimental', print_notes=True, add_to_anki=True)
     make_notes(fields, deck_name='TEST', print_notes=True, add_to_anki=False)
+
+
+def _request(action, **params):
+    return {'action': action, 'params': params, 'version': 6}
 
 
 def test():

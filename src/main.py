@@ -53,8 +53,11 @@ class MainFlow:
         if ui.add_card_or_not(question, orig_answer):
             self.last_added.append((f'{self.prefix}{question}', orig_answer))
 
+    def auto_save(self):
+        self._save(send_to_anki=False, show_message=False)
+
     def cards_control(self):
-        # todo save and exit
+        # low-priority todo save and exit
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
         self.last_added = []
         for question, answer in temp_cards:
@@ -131,26 +134,27 @@ class MainFlow:
                 self.cards_control()
             if self.i == len(self.sentences):
                 break
-            self.save(silent=True)
+            self.auto_save()
         self.save()
         print('All done')
 
-    def _replace_snippet(self):
-        pass
-
-    def save(self, silent=False):
-        # todo notes shouldn't be always saved automatically!
-        if self.current_note:
-            self.notes.append(tuple(self.current_note))
-            self.current_note = []
-        # todo only if notes is not empty
-        anki_connect.make_notes(
-            tuple(self.notes),
-            deck_name='experimental',
-            print_notes=True,
-            add_to_anki=True,
-        )
-        self.notes = []
+    def _save(
+            self,
+            send_to_anki: bool,
+            show_message: bool,
+    ):
+        if send_to_anki:
+            if self.current_note:
+                self.notes.append(tuple(self.current_note))
+                self.current_note = []
+            # todo only if notes is not empty
+            anki_connect.make_notes(
+                tuple(self.notes),
+                deck_name='experimental',
+                print_notes=True,
+                add_to_anki=True,
+            )
+            self.notes = []
 
         cards_lines = [f'{q}\t{a}' for q, a in self.cards]
         cards_text = '\n'.join(cards_lines) + '\n'
@@ -162,8 +166,11 @@ class MainFlow:
         with open(self.remaining_path, 'w', encoding='utf-8') as remaining_out:
             remaining_out.write(remaining_text)
 
-        if not silent:
+        if show_message:
             print('Saved')
+
+    def save(self):
+        self._save(send_to_anki=True, show_message=True)
 
     def snippet_control(self):
         # todo add option to edit snippet right now (replace etc.)
