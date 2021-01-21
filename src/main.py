@@ -147,14 +147,14 @@ class MainFlow:
             if self.current_note:
                 self.notes.append(tuple(self.current_note))
                 self.current_note = []
-            # todo only if notes is not empty
-            anki_connect.make_notes(
-                tuple(self.notes),
-                deck_name='experimental',
-                print_notes=True,
-                add_to_anki=True,
-            )
-            self.notes = []
+            if self.notes:
+                anki_connect.make_notes(
+                    tuple(self.notes),
+                    deck_name='experimental',
+                    print_notes=True,
+                    add_to_anki=True,
+                )
+                self.notes = []
 
         cards_lines = [f'{q}\t{a}' for q, a in self.cards]
         cards_text = '\n'.join(cards_lines) + '\n'
@@ -173,8 +173,6 @@ class MainFlow:
         self._save(send_to_anki=True, show_message=True)
 
     def snippet_control(self):
-        # todo add option to edit snippet right now (replace etc.)
-        # todo in editing menu, also add input new snippet, remove prefix
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
             new_note_text = f'New note (current: {len(self.current_note)} cards)'

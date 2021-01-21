@@ -43,7 +43,7 @@ def add_card_or_not(question, answer):
     print(question)
     print('-' * 50)
     print(answer)
-    # todo optionally change gap
+    # low-priority todo optionally change gap
     return yn('\nOk?')
 
 
@@ -126,6 +126,7 @@ The option list is either a tuple of strings
 or a tuple of tuples (string, object),
 (then return the object matching the choice).
     """
+    # low-priority todo reimplement menu to support ((key1, prompt1, action1), (key2, ...) ...)
     if isinstance(options[0], tuple) and len(options[0]) == 2:
         displayables = []
         returnables = []
@@ -145,7 +146,7 @@ or a tuple of tuples (string, object),
     while True:
         choice = get_key()
         if choice in keys:
-            return returnables[keys.index(choice)]  # todo small inefficiency
+            return returnables[keys.index(choice)]  # low-priority todo small inefficiency
 
 
 def show_snippet(snippet: str, prefix: str) -> None:
