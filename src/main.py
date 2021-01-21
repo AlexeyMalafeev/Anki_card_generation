@@ -61,8 +61,20 @@ class MainFlow:
         temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
         self.last_added = []
         for question, answer in temp_cards:
-            if ui.add_card_or_not(question, answer):
+            action = ui.menu(
+                options=(
+                    'Add',
+                    'Skip',
+                    'Back to snippet',
+                ),
+                keys='asb'
+            )
+            if action == 'Add':
                 self.last_added.append((question, answer))
+            elif action == 'Back to snippet':
+                self.last_added = []
+                self.i -= 1
+                return
         while True:
             ui.cls()
             self.last_added.sort()
