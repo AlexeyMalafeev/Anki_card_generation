@@ -51,6 +51,10 @@ def cls():
     print(chr(27) + "[2J")
 
 
+def get_edited_snippet(curr_snippet, prefix):
+    raise NotImplementedError  # todo
+
+
 def get_int(a: int, b: int) -> int:
     assert a < b, f'{a = } is not less than {b = }'
     while True:
@@ -73,8 +77,13 @@ If key is pressed, return its string; if no key is pressed, return 0
 
 def get_prefix() -> str:
     prefix = input('\nChoose a prefix: ')
-    if prefix and not prefix.endswith(':'):
-        prefix += ':'
+    if not prefix or prefix.endswith(': '):
+        return prefix
+    if prefix.endswith(':'):
+        prefix += ' '
+    else:
+        prefix += ': '
+    assert prefix.endswith(': '), f'prefix "{prefix}" is weird'
     return prefix
 
 

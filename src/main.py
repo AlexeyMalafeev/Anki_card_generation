@@ -92,6 +92,9 @@ class MainFlow:
         if ui.yn('Please confirm:'):
             self.last_added = self.last_added[:idx] + self.last_added[idx + 1:]
 
+    def edit_snippet(self):
+        pass
+
     def join_snippets(self):
         self.prev_snippet, self.curr_snippet, self.next_snippet = ui.join_snippets(
             curr_snippet=self.curr_snippet,
@@ -128,6 +131,9 @@ class MainFlow:
             self.save(silent=True)
         self.save()
         print('All done')
+
+    def _replace_snippet(self):
+        pass
 
     def save(self, silent=False):
         # todo notes shouldn't be always saved automatically!
