@@ -21,7 +21,6 @@ class MainFlow:
         self.notes = []
         self.current_note = []
         self.last_added = []  # of tuples: (question_str, answer_str)
-        self.snippets_for_editing = []
 
         self.curr_snippet = ''
         self.prev_snippet = ''
@@ -33,8 +32,6 @@ class MainFlow:
         self.backup_path = Path('..', 'new_cards_backup.txt')
         self.backup_path.write_text(backup_text, encoding='utf-8')
         self.cards_path.write_text('', encoding='utf-8')
-        self.editing_path = Path('..', 'snippets_for_editing.txt')
-        self.editing_path.write_text('', encoding='utf-8')
         self.remaining_path = Path('..', 'input.txt')
 
         self.main_loop()
@@ -152,11 +149,6 @@ class MainFlow:
             cards_out.write(cards_text)
         self.cards = []
 
-        snippets_text = '\n'.join(self.snippets_for_editing) + '\n'
-        with open(self.editing_path, 'a', encoding='utf-8') as editing_out:
-            editing_out.write(snippets_text)
-        self.snippets_for_editing = []
-
         remaining_text = '\n'.join(self.sentences[self.i:]) + '\n'
         with open(self.remaining_path, 'w', encoding='utf-8') as remaining_out:
             remaining_out.write(remaining_text)
@@ -175,7 +167,7 @@ class MainFlow:
                     'Cards',
                     new_note_text,
                     'Next',
-                    'Edit manually later',
+                    'Edit',
                     'Join',
                     'Split',
                     'Prefix',
@@ -198,15 +190,13 @@ class MainFlow:
                 self.i += 1
                 return False
 
-            elif choice == 'Edit manually later':
-                self.snippets_for_editing.append(self.curr_snippet)
-                self.i += 1
-                return False
+            elif choice == 'Edit':
+                raise NotImplementedError  # todo
 
             elif choice == 'Join':
                 self.join_snippets()
 
-            elif choice == 'Split':  # todo
+            elif choice == 'Split':
                 self.split_snippets()
 
             elif choice == 'Prefix':
