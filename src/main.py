@@ -98,6 +98,7 @@ class MainFlow:
     def edit_snippet(self):
         new_snippet = ui.get_edited_snippet(self.curr_snippet, self.prefix)
         self.sentences = (self.sentences[:self.i] + (new_snippet, ) + self.sentences[self.i + 1:])
+        self.set_snippets()
 
     def join_snippets(self):
         self.prev_snippet, self.curr_snippet, self.next_snippet = ui.join_snippets(
@@ -109,12 +110,12 @@ class MainFlow:
             self.sentences = (self.sentences[:max(self.i - 1, 1)] +
                               (self.curr_snippet, ) +
                               self.sentences[self.i + 1:])
-            self.prev_snippet = self.sentences[self.i - 1]
+            self.set_snippets()
         if not self.next_snippet:
             self.sentences = (self.sentences[:self.i] +
                               (self.curr_snippet, ) +
                               self.sentences[min(self.i + 2, len(self.sentences) - 1):])
-            self.next_snippet = self.sentences[self.i + 1]
+            self.set_snippets()
 
     def main_loop(self):
         format_func = text_processing.format_snippet_for_anki
@@ -170,6 +171,13 @@ class MainFlow:
 
     def save(self):
         self._save(send_to_anki=True, show_message=True)
+
+    def set_snippets(self):
+        """setting next_snippet may cause IndexError, needs to be handled outside"""
+        format_func = text_processing.format_snippet_for_anki
+        self.curr_snippet = format_func(self.sentences[self.i])
+        self.prev_snippet = format_func(self.sentences[self.i - 1])
+        self.next_snippet = format_func(self.sentences[self.i + 1])
 
     def snippet_control(self):
         while True:
@@ -231,6 +239,7 @@ class MainFlow:
             self.sentences = (self.sentences[:self.i] +
                               (self.curr_snippet, self.next_snippet) +
                               self.sentences[self.i + 1:])
+            self.set_snippets()
 
 
 MainFlow()
