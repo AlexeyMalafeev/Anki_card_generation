@@ -1,13 +1,16 @@
 from pathlib import Path
 import sys
 
+import yaml
+
 import anki_connect
 import card_generation
 import text_processing
 import ui
 
 # todo add statistics
-# todo split doesn't work
+config_path = Path('..', 'config.yaml')
+config = yaml.safe_load(config_path.read_text())
 
 
 class MainFlow:
@@ -170,7 +173,7 @@ class MainFlow:
             if self.notes:
                 anki_connect.make_notes(
                     tuple(self.notes),
-                    deck_name='experimental',
+                    deck_name=config['target_deck'],
                     print_notes=False,
                     add_to_anki=True,
                 )

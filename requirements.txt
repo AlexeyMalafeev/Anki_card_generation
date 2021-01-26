@@ -1,4 +1,5 @@
 pyate
 python-rake
+pyyaml
 spacy
 stop-words
