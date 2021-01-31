@@ -80,23 +80,11 @@ class MainFlow:
         if show_message:
             print('Saved')
 
-    def add_manually(self):
-        ui.show_snippet(self.curr_snippet, self.prefix)
-        snippet_lower = self.curr_snippet.lower()
-        while True:
-            target = input('Input target word or phrase: ').lower()
-            if target in snippet_lower:
-                break
-        gap = card_generation.PHRASE_GAP if ' ' in target else card_generation.WORD_GAP
-        question, orig_answer = card_generation.make_gap(
-            text=self.curr_snippet,
-            text_lower=snippet_lower,
-            target=target,
-            gap=gap
-        )
-        cand_card = (f'{self.prefix}{question}', orig_answer)
-        if cand_card not in self.last_added:
-            self.last_added.append(cand_card)
+    def add_cards(self):
+        for question, answer in self.last_added:
+            question_cleaned = text_processing.clean_text_for_anki_import(question)
+            self.cards.append((question_cleaned, answer))
+            self.current_note.extend([question, answer])
 
     def auto_save(self):
         self._save(send_to_anki=False, show_message=False)
@@ -123,32 +111,9 @@ class MainFlow:
                 self.i -= 1
                 return
             elif action == 'Done':
-                break
-        while True:
-            ui.cls()
-            self.last_added.sort()
-            cards_preview = '\n'.join(
-                (f'{i}. {q} -> {a}' for i, (q, a) in enumerate(self.last_added))
-            )
-            print(cards_preview, '\n')
-            choice = ui.menu(
-                options=(
-                    'Add manually',
-                    'Delete',
-                    'Next snippet',
-                ),
-                keys='adn',
-            )
-            if choice == 'Add manually':
-                self.add_manually()
-            elif choice == 'Delete':
-                self.delete_card_by_idx()
-            elif choice == 'Next snippet':
-                break
-        for question, answer in self.last_added:
-            question_cleaned = text_processing.clean_text_for_anki_import(question)
-            self.cards.append((question_cleaned, answer))
-            self.current_note.extend([question, answer])
+                self.confirm_or_add_manually()
+                self.add_cards()
+                return
 
     def code_snippet_control(self):
         while True:
@@ -196,6 +161,29 @@ class MainFlow:
 
             elif choice == 'Quit':
                 sys.exit()
+
+    def confirm_or_add_manually(self):
+        while True:
+            ui.cls()
+            self.last_added.sort()
+            cards_preview = '\n'.join(
+                (f'{i}. {q} -> {a}' for i, (q, a) in enumerate(self.last_added))
+            )
+            print(cards_preview, '\n')
+            choice = ui.menu(
+                options=(
+                    'Add manually',
+                    'Delete',
+                    'Next snippet',
+                ),
+                keys='adn',
+            )
+            if choice == 'Add manually':
+                self.make_cards_manually()
+            elif choice == 'Delete':
+                self.delete_card_by_idx()
+            elif choice == 'Next snippet':
+                return
 
     def delete_card_by_idx(self):
         idx = ui.get_int(0, len(self.last_added) - 1)
@@ -262,6 +250,24 @@ class MainFlow:
             self.auto_save()
         self.save()
         print('All code input has been processed.')
+
+    def make_cards_manually(self):
+        ui.show_snippet(self.curr_snippet, self.prefix)
+        snippet_lower = self.curr_snippet.lower()
+        while True:
+            target = input('Input target word or phrase: ').lower()
+            if target in snippet_lower:
+                break
+        gap = card_generation.PHRASE_GAP if ' ' in target else card_generation.WORD_GAP
+        question, orig_answer = card_generation.make_gap(
+            text=self.curr_snippet,
+            text_lower=snippet_lower,
+            target=target,
+            gap=gap
+        )
+        cand_card = (f'{self.prefix}{question}', orig_answer)
+        if cand_card not in self.last_added:
+            self.last_added.append(cand_card)
 
     def preprocess_code_input(self, code_input_text):
         self.codes = [
