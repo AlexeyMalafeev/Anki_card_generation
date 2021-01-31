@@ -1,4 +1,18 @@
-# leave target_deck empty if you don't want to send cards to Anki via Anki Connect API
-# cards will only be exported as a text file
-#target_deck: IT
-target_deck:
+# ---Anki---
+# Leave `target deck` empty if you don't want to send cards to Anki via Anki Connect API.
+# Then, cards will only be exported as a text file.
+#target deck: IT
+target deck:
+
+# ---Files---
+# Source material for regular cards (non-code, just text that will be split into sentences)
+input file: input.txt
+
+# Source material for code-based cards (handled differently)
+code input file: code input.txt
+
+# File for new cards (in text format, can be imported to Anki)
+cards output file: new cards.txt
+
+# Backup file for previously generated new cards (in text format, can be imported to Anki)
+cards output backup file: new cards backup.txt

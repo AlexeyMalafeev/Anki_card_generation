@@ -12,14 +12,18 @@ import ui
 
 class MainFlow:
 
-    def __init__(self):
-        input_text = Path('..', 'input.txt').read_text(encoding='utf-8')
+    def __init__(self, config):
+        input_text = Path('..', config['input file']).read_text(encoding='utf-8')
+        code_input_text = Path('..', config['code input file']).read_text(encoding='utf-8')
 
         ui.show_text_preview(input_text, 500)
 
         self.prefix = ui.get_prefix()
+        # todo initialize only, move processing logic to separate method
         self.sentences = text_processing.get_sentences(input_text)
         self.sentences = ('',) + self.sentences + ('',)
+        # todo implement codes processing
+        self.codes = tuple()
         self.cards = []  # of tuples: (question_str, answer_str)
         self.notes = []
         self.current_note = []
@@ -30,12 +34,13 @@ class MainFlow:
         self.next_snippet = ''
         self.i = 0
 
-        self.cards_path = Path('..', 'new_cards.txt')
+        self.cards_path = Path('..', config['cards output file'])
         backup_text = self.cards_path.read_text(encoding='utf-8')
-        self.backup_path = Path('..', 'new_cards_backup.txt')
+        self.backup_path = Path('..', config['cards output backup file'])
         self.backup_path.write_text(backup_text, encoding='utf-8')
         self.cards_path.write_text('', encoding='utf-8')
-        self.remaining_path = Path('..', 'input.txt')
+        self.remaining_path = Path('..', config['input file'])
+        self.target_anki_deck = config['target deck']
 
         self.main_loop()
 
@@ -163,14 +168,14 @@ class MainFlow:
             send_to_anki: bool,
             show_message: bool,
     ):
-        if send_to_anki:
+        if send_to_anki and self.target_anki_deck:
             if self.current_note:
                 self.notes.append(tuple(self.current_note))
                 self.current_note = []
             if self.notes:
                 anki_connect.make_notes(
                     tuple(self.notes),
-                    deck_name=config['target_deck'],
+                    deck_name=self.target_anki_deck,
                     print_notes=False,
                     add_to_anki=True,
                 )
@@ -263,4 +268,4 @@ class MainFlow:
             self.set_snippets()
 
 
-MainFlow()
+MainFlow(config=config)
