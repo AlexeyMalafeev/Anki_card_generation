@@ -1,5 +1,5 @@
 from pathlib import Path
-from pprint import pprint
+# from pprint import pprint
 import re
 import sys
 
@@ -117,9 +117,9 @@ class MainFlow:
                 self.i -= 1
                 return
             elif action == 'Done':
-                self.confirm_or_add_manually()
-                self.add_cards()
-                return
+                break
+        self.confirm_or_add_manually()
+        self.add_cards()
 
     def code_snippet_control(self):
         while True:
@@ -245,13 +245,13 @@ class MainFlow:
         print('All text input has been processed.')
 
     def main_loop_for_codes(self):
-        self.i = 1
+        self.i = 0
         while True:
             self.curr_snippet = self.codes[self.i]
             use_code_snippet = self.code_snippet_control()
             if use_code_snippet:
                 self.cards_control(code_mode=True)
-            if self.i == len(self.codes - 1):
+            if self.i == len(self.codes) - 1:
                 break
             self.auto_save()
         self.save()

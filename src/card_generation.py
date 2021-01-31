@@ -54,6 +54,8 @@ def make_candidate_cards_code(snippet: str, prefix: str) -> tuple:
                         f'{CODE_TAIL} but it doesn\'t')
     for line in target_lines:
         target = line.lstrip()
+        if not target:
+            continue
         question = snippet.replace(target, PHRASE_GAP)
         temp_cards.append((f'{prefix}{question}', target))
     return tuple(temp_cards)
