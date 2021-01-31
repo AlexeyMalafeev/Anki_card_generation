@@ -1,4 +1,6 @@
 from pathlib import Path
+from pprint import pprint
+import re
 import sys
 
 import anki_connect
@@ -39,11 +41,44 @@ class MainFlow:
         self.cards_path.write_text('', encoding='utf-8')
         self.remaining_path = Path('..', config['input file'])
 
-        if input_text.split() != '':
-            self.init_sentences(input_text)
+        if input_text.strip() != '':
+            self.preprocess_input_text(input_text)
             self.main_loop()
 
-        if
+        if code_input_text.strip() != '':
+            self.preprocess_code_input(code_input_text)
+            self.main_loop_for_codes()
+
+    def _save(
+            self,
+            send_to_anki: bool,
+            show_message: bool,
+    ):
+        if send_to_anki and self.target_anki_deck:
+            if self.current_note:
+                self.notes.append(tuple(self.current_note))
+                self.current_note = []
+            if self.notes:
+                anki_connect.make_notes(
+                    tuple(self.notes),
+                    deck_name=self.target_anki_deck,
+                    print_notes=False,
+                    add_to_anki=True,
+                )
+                self.notes = []
+
+        cards_lines = [f'{q}\t{a}' for q, a in self.cards]
+        cards_text = '\n'.join(cards_lines) + '\n'
+        with open(self.cards_path, 'a', encoding='utf-8') as cards_out:
+            cards_out.write(cards_text)
+        self.cards = []
+
+        remaining_text = '\n'.join(self.sentences[self.i:]) + '\n'
+        with open(self.remaining_path, 'w', encoding='utf-8') as remaining_out:
+            remaining_out.write(remaining_text)
+
+        if show_message:
+            print('Saved')
 
     def add_manually(self):
         ui.show_snippet(self.curr_snippet, self.prefix)
@@ -126,12 +161,6 @@ class MainFlow:
         self.sentences = (self.sentences[:self.i] + (new_snippet, ) + self.sentences[self.i + 1:])
         self.set_snippets()
 
-    def init_sentences(self, input_text):
-        ui.show_text_preview(input_text, 500)
-        self.prefix = ui.get_prefix()
-        self.sentences = text_processing.get_sentences(input_text)
-        self.sentences = ('',) + self.sentences + ('',)
-
     def join_snippets(self):
         choice = ui.join_snippets(
             prev_snippet=self.prev_snippet,
@@ -170,39 +199,21 @@ class MainFlow:
         self.save()
         print('All done')
 
-    def main_loop_codes(self):
+    def main_loop_for_codes(self):
         pass
 
-    def _save(
-            self,
-            send_to_anki: bool,
-            show_message: bool,
-    ):
-        if send_to_anki and self.target_anki_deck:
-            if self.current_note:
-                self.notes.append(tuple(self.current_note))
-                self.current_note = []
-            if self.notes:
-                anki_connect.make_notes(
-                    tuple(self.notes),
-                    deck_name=self.target_anki_deck,
-                    print_notes=False,
-                    add_to_anki=True,
-                )
-                self.notes = []
+    def preprocess_code_input(self, code_input_text):
+        codes = [
+            code_stripped for code in re.split(r'\n[-=_]{3,}', code_input_text)
+            if (code_stripped := code.strip())
+        ]
+        print(f'\n{"-" * 80}\n'.join(codes))
 
-        cards_lines = [f'{q}\t{a}' for q, a in self.cards]
-        cards_text = '\n'.join(cards_lines) + '\n'
-        with open(self.cards_path, 'a', encoding='utf-8') as cards_out:
-            cards_out.write(cards_text)
-        self.cards = []
-
-        remaining_text = '\n'.join(self.sentences[self.i:]) + '\n'
-        with open(self.remaining_path, 'w', encoding='utf-8') as remaining_out:
-            remaining_out.write(remaining_text)
-
-        if show_message:
-            print('Saved')
+    def preprocess_input_text(self, input_text):
+        ui.show_text_preview(input_text, 500)
+        self.prefix = ui.get_prefix()
+        self.sentences = text_processing.get_sentences(input_text)
+        self.sentences = ('',) + self.sentences + ('',)
 
     def save(self):
         self._save(send_to_anki=True, show_message=True)
