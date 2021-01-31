@@ -197,17 +197,27 @@ class MainFlow:
                 break
             self.auto_save()
         self.save()
-        print('All done')
+        print('All text input has been processed.')
 
     def main_loop_for_codes(self):
-        pass
+        self.i = 1
+        while True:
+            use_code_snippet = self.code_snippet_control()
+            if use_code_snippet:
+                self.cards_control()
+            if self.i == len(self.codes - 1):
+                break
+            self.auto_save()
+        self.save()
+        print('All code input has been processed.')
 
     def preprocess_code_input(self, code_input_text):
-        codes = [
+        self.codes = [
             code_stripped for code in re.split(r'\n[-=_]{3,}', code_input_text)
             if (code_stripped := code.strip())
         ]
-        print(f'\n{"-" * 80}\n'.join(codes))
+        # print(f'\n{"-" * 80}\n'.join(self.codes))
+        self.codes = tuple(self.codes)
 
     def preprocess_input_text(self, input_text):
         ui.show_text_preview(input_text, 500)
