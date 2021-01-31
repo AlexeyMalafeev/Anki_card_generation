@@ -149,10 +149,31 @@ def preview_card(question, answer):
     print(answer)
 
 
+def preview_code_card(question, answer):
+    cls()
+    print('Candidate card:\n')
+    question = replace_code_html(question)
+    print(question)
+    print('-' * 50)
+    print(answer)
+
+
+def replace_code_html(text):
+    text = text.replace(
+        '<span style="font-size:medium"><code align="left" style="color: green"><pre>', ''
+    )
+    text = text.replace('</pre></code></span>', '')
+    return text
+
+
+def show_code_snippet(snippet: str, prefix: str) -> None:
+    cls()
+    snippet = replace_code_html(snippet)
+    print(f' Candidate snippet:\n\n{prefix}{snippet}')
+
+
 def show_snippet(snippet: str, prefix: str) -> None:
     cls()
-    if prefix:
-        prefix += ' '
     print(f' Candidate snippet:\n\n{prefix}{snippet}')
 
 

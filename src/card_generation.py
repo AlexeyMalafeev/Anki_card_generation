@@ -6,8 +6,8 @@ import term_extraction
 # Constants
 ####################################################################################################
 
-CODE_DELIMETER = '<span style="font-size:medium"><code align="left" style="color: green"><div>'
-CODE_TAIL = '</div></code></span>'
+CODE_DELIMETER = '<span style="font-size:medium"><code align="left" style="color: green"><pre>'
+CODE_TAIL = '</pre></code></span>'
 MIN_SENT_LENGTH = 50
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'

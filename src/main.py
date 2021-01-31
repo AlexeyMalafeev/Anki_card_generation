@@ -95,12 +95,14 @@ class MainFlow:
         # low-priority todo save and exit
         if code_mode:
             make_cards = card_generation.make_candidate_cards_code
+            preview_cards = ui.preview_code_card
         else:
             make_cards = card_generation.make_candidate_cards
+            preview_cards = ui.preview_card
         temp_cards = make_cards(self.curr_snippet, self.prefix)
         self.last_added = []
         for question, answer in temp_cards:
-            ui.preview_card(question, answer)
+            preview_cards(question, answer)
             action = ui.menu(
                 options=(
                     'Add',
@@ -123,8 +125,8 @@ class MainFlow:
 
     def code_snippet_control(self):
         while True:
-            ui.show_snippet(self.curr_snippet, self.prefix)
-            print(f'\n snippet {self.i} / {len(self.codes)}\n')
+            ui.show_code_snippet(self.curr_snippet, self.prefix)
+            print(f'\n snippet {self.i + 1} / {len(self.codes)}\n')
             new_note_text = f'New note (current: {len(self.current_note) // 2} cards)'
             choice = ui.menu(
                 options=(
@@ -251,7 +253,7 @@ class MainFlow:
             use_code_snippet = self.code_snippet_control()
             if use_code_snippet:
                 self.cards_control(code_mode=True)
-            if self.i == len(self.codes) - 1:
+            if self.i == len(self.codes):
                 break
             self.auto_save()
         self.save()
