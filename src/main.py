@@ -16,12 +16,8 @@ class MainFlow:
         input_text = Path('..', config['input file']).read_text(encoding='utf-8')
         code_input_text = Path('..', config['code input file']).read_text(encoding='utf-8')
 
-        ui.show_text_preview(input_text, 500)
-
-        self.prefix = ui.get_prefix()
-        # todo initialize only, move processing logic to separate method
-        self.sentences = text_processing.get_sentences(input_text)
-        self.sentences = ('',) + self.sentences + ('',)
+        self.prefix = ''
+        self.sentences = tuple()
         # todo implement codes processing
         self.codes = tuple()
         self.cards = []  # of tuples: (question_str, answer_str)
@@ -34,15 +30,20 @@ class MainFlow:
         self.next_snippet = ''
         self.i = 0
 
+        self.target_anki_deck = config['target deck']
+
         self.cards_path = Path('..', config['cards output file'])
         backup_text = self.cards_path.read_text(encoding='utf-8')
         self.backup_path = Path('..', config['cards output backup file'])
         self.backup_path.write_text(backup_text, encoding='utf-8')
         self.cards_path.write_text('', encoding='utf-8')
         self.remaining_path = Path('..', config['input file'])
-        self.target_anki_deck = config['target deck']
 
-        self.main_loop()
+        if input_text.split() != '':
+            self.init_sentences(input_text)
+            self.main_loop()
+
+        if
 
     def add_manually(self):
         ui.show_snippet(self.curr_snippet, self.prefix)
@@ -125,6 +126,12 @@ class MainFlow:
         self.sentences = (self.sentences[:self.i] + (new_snippet, ) + self.sentences[self.i + 1:])
         self.set_snippets()
 
+    def init_sentences(self, input_text):
+        ui.show_text_preview(input_text, 500)
+        self.prefix = ui.get_prefix()
+        self.sentences = text_processing.get_sentences(input_text)
+        self.sentences = ('',) + self.sentences + ('',)
+
     def join_snippets(self):
         choice = ui.join_snippets(
             prev_snippet=self.prev_snippet,
@@ -162,6 +169,9 @@ class MainFlow:
             self.auto_save()
         self.save()
         print('All done')
+
+    def main_loop_codes(self):
+        pass
 
     def _save(
             self,
