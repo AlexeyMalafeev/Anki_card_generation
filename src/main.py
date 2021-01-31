@@ -150,11 +150,62 @@ class MainFlow:
             self.cards.append((question_cleaned, answer))
             self.current_note.extend([question, answer])
 
+    def code_snippet_control(self):
+        while True:
+            ui.show_snippet(self.curr_snippet, self.prefix)
+            print(f'\n snippet {self.i} / {len(self.codes)}\n')
+            new_note_text = f'New note (current: {len(self.current_note) // 2} cards)'
+            choice = ui.menu(
+                options=(
+                    'Add cards',
+                    new_note_text,
+                    'Skip',
+                    'Edit',
+                    'Prefix',
+                    'Save',
+                    'Save and exit',
+                    'Quit',
+                ),
+                keys='ansepSEQ',
+            )
+
+            if choice == 'Add cards':
+                self.i += 1
+                return True
+
+            elif choice == new_note_text:
+                self.notes.append(tuple(self.current_note))
+                self.current_note = []
+
+            elif choice == 'Skip':
+                self.i += 1
+                return False
+
+            elif choice == 'Edit':
+                self.edit_code_snippet()
+
+            elif choice == 'Prefix':
+                self.prefix = ui.get_prefix()
+
+            elif choice == 'Save':
+                self.save()
+
+            elif choice == 'Save and exit':
+                self.save()
+                sys.exit()
+
+            elif choice == 'Quit':
+                sys.exit()
+
     def delete_card_by_idx(self):
         idx = ui.get_int(0, len(self.last_added) - 1)
         print(f'Delete this?\n{self.last_added[idx]}')
         if ui.yn('Please confirm:'):
             self.last_added = self.last_added[:idx] + self.last_added[idx + 1:]
+
+    def edit_code_snippet(self):
+        new_snippet = ui.get_edited_snippet(self.curr_snippet, self.prefix)
+        self.codes = (self.codes[:self.i]) + (new_snippet, ) + self.sentences[self.i + 1:]
 
     def edit_snippet(self):
         new_snippet = ui.get_edited_snippet(self.curr_snippet, self.prefix)
@@ -202,6 +253,7 @@ class MainFlow:
     def main_loop_for_codes(self):
         self.i = 1
         while True:
+            self.curr_snippet = self.codes[self.i]
             use_code_snippet = self.code_snippet_control()
             if use_code_snippet:
                 self.cards_control()
