@@ -9,7 +9,7 @@ from setup import config
 import text_processing
 import ui
 
-# todo add statistics
+# low-priority todo add statistics
 
 
 class MainFlow:
@@ -18,12 +18,11 @@ class MainFlow:
         input_text = Path('..', config['input file']).read_text(encoding='utf-8')
         code_input_text = Path('..', config['code input file']).read_text(encoding='utf-8')
 
-        self.prefix = ''
         self.sentences = tuple()
-        # todo implement codes processing
         self.codes = tuple()
+        self.prefix = ''
         self.cards = []  # of tuples: (question_str, answer_str)
-        self.notes = []
+        self.notes = []  # of tuples of tuples: ((q1, a1), (q2, a2), ...)  todo helper classes
         self.current_note = []
         self.last_added = []  # of tuples: (question_str, answer_str)
 
@@ -89,9 +88,16 @@ class MainFlow:
     def auto_save(self):
         self._save(send_to_anki=False, show_message=False)
 
-    def cards_control(self):
+    def cards_control(
+            self,
+            code_mode: bool,
+    ):
         # low-priority todo save and exit
-        temp_cards = card_generation.make_candidate_cards(self.curr_snippet, self.prefix)
+        if code_mode:
+            make_cards = card_generation.make_candidate_cards_code
+        else:
+            make_cards = card_generation.make_candidate_cards
+        temp_cards = make_cards(self.curr_snippet, self.prefix)
         self.last_added = []
         for question, answer in temp_cards:
             ui.preview_card(question, answer)
@@ -231,7 +237,7 @@ class MainFlow:
             use_snippet = self.snippet_control()
 
             if use_snippet:
-                self.cards_control()
+                self.cards_control(code_mode=False)
             if self.i == len(self.sentences):
                 break
             self.auto_save()
@@ -244,7 +250,7 @@ class MainFlow:
             self.curr_snippet = self.codes[self.i]
             use_code_snippet = self.code_snippet_control()
             if use_code_snippet:
-                self.cards_control()
+                self.cards_control(code_mode=True)
             if self.i == len(self.codes - 1):
                 break
             self.auto_save()

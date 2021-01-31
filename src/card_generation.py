@@ -6,6 +6,8 @@ import term_extraction
 # Constants
 ####################################################################################################
 
+CODE_DELIMETER = '<span style="font-size:medium"><code align="left" style="color: green"><div>'
+CODE_TAIL = '</div></code></span>'
 MIN_SENT_LENGTH = 50
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'
@@ -32,6 +34,28 @@ def make_candidate_cards(snippet: str, prefix: str) -> tuple:
                 gap=gap
             )
             temp_cards.append((f'{prefix}{question}', orig_target))
+    return tuple(temp_cards)
+
+
+def make_candidate_cards_code(snippet: str, prefix: str) -> tuple:
+    temp_cards = []
+    replaced = set()
+    try:
+        target_chunk = snippet.split(CODE_DELIMETER)[1].strip()
+    except IndexError:
+        # todo custom exception for card formatting
+        raise Exception('Input text for cards with code should contain code delimeter '
+                        f'{CODE_DELIMETER} but it doesn\'t')
+    target_lines = target_chunk.split('\n')
+    if (last_line := target_lines[-1]).endswith(CODE_TAIL):
+        target_lines[-1] = last_line.replace(CODE_TAIL, '')
+    else:
+        raise Exception('Input text for cards with code should contain code tag "tail" '
+                        f'{CODE_TAIL} but it doesn\'t')
+    for line in target_lines:
+        target = line.lstrip()
+        question = snippet.replace(target, PHRASE_GAP)
+        temp_cards.append((f'{prefix}{question}', target))
     return tuple(temp_cards)
 
 
