@@ -1,16 +1,13 @@
 from pathlib import Path
 import sys
 
-import yaml
-
 import anki_connect
 import card_generation
+from setup import config
 import text_processing
 import ui
 
 # todo add statistics
-config_path = Path('..', 'config.yaml')
-config = yaml.safe_load(config_path.read_text())
 
 
 class MainFlow:
