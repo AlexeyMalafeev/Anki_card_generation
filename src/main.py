@@ -2,6 +2,7 @@ from pathlib import Path
 # from pprint import pprint
 import re
 import sys
+from urllib.error import URLError
 
 import anki_connect
 import card_generation
@@ -9,6 +10,7 @@ from setup import config
 import text_processing
 import ui
 
+# todo bug: when editing a snippet, no need for post-edit processing (Java -> java at the beginning of a snippet)
 # low-priority todo add statistics
 
 
@@ -58,12 +60,21 @@ class MainFlow:
                 self.notes.append(tuple(self.current_note))
                 self.current_note = []
             if self.notes:
-                anki_connect.make_notes(
-                    tuple(self.notes),
-                    deck_name=self.target_anki_deck,
-                    print_notes=False,
-                    add_to_anki=True,
-                )
+                while True:
+                    try:
+                        anki_connect.make_notes(
+                            tuple(self.notes),
+                            deck_name=self.target_anki_deck,
+                            print_notes=False,
+                            add_to_anki=True,
+                        )
+                    except URLError:
+                        print('Anki desktop is not running. '
+                              'Start Anki and press Enter to continue '
+                              '(AnkiConnect plugin must be installed)')
+                        input('...')
+                    else:
+                        break
                 self.notes = []
 
         cards_lines = [f'{q}\t{a}' for q, a in self.cards]
@@ -302,6 +313,7 @@ class MainFlow:
         self.next_snippet = format_func(self.sentences[self.i + 1])
 
     def snippet_control(self):
+        # todo add option to remove references like [1], [3,4], [5:10] etc.
         while True:
             ui.show_snippet(self.curr_snippet, self.prefix)
             print(f'\n snippet {self.i} / {len(self.sentences) - 2}\n')
