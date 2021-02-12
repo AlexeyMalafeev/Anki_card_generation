@@ -10,6 +10,7 @@ from setup import config
 import text_processing
 import ui
 
+# todo multi-field cards from text file (blank lines separate notes)
 # todo bug: when editing a snippet, no need for post-edit processing (Java -> java at the beginning of a snippet)
 # low-priority todo add statistics
 

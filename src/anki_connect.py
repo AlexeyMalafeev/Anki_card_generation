@@ -25,10 +25,6 @@ def anki_invoke(action, **params):
     return response['result']
 
 
-def main():
-    make_notes_test()
-
-
 def make_notes(
         fields_nested: tuple or list,  # of tuples or lists
         deck_name: str = 'experimental',
@@ -68,55 +64,8 @@ def make_notes(
         response = anki_invoke('addNotes', notes=notes)
         print(response)
 
-
-def make_notes_test():
-    fields = (
-        ('question 1', 'answer 1', 'question 2', 'answer 2'),
-        ('question 1', 'answer 1', 'question 2', 'answer 2', 'question 3', 'answer 3'),
-        ('question 1', 'answer 1'),
-    )
-    # make_notes(fields, deck_name='experimental', print_notes=True, add_to_anki=True)
-    make_notes(fields, deck_name='TEST', print_notes=True, add_to_anki=False)
+    return notes
 
 
 def _request(action, **params):
     return {'action': action, 'params': params, 'version': 6}
-
-
-def test():
-    deck_names = anki_invoke('deckNames')
-    print(f'{deck_names = }')
-    # also deckNamesAndIds
-
-    model_names = anki_invoke('modelNames')
-    print(f'{model_names = }')
-
-    # getEaseFactors, setEaseFactors
-    # cardsInfo
-
-    response = anki_invoke(
-        'addNotes',
-        notes=[
-            {
-                'deckName': 'experimental',
-                'modelName': 'theory, 4q 4a',
-                'fields': {
-                    '1q': 'this is first question',
-                    '1a': 'this is first answer',
-                    '2q': 'second question',
-                    '2a': 'second answer',
-                    '3q': 'third q',
-                    '3a': 'third a',
-                    '4q': '4q',
-                    '4a': '4a',
-                },
-            },
-        ],
-    )
-    print(response)
-
-    anki_invoke('sync')
-
-
-if __name__ == '__main__':
-    main()
