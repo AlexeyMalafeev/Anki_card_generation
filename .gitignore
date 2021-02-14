@@ -1,9 +1,9 @@
 /main.py - Shortcut.lnk
-/input bckp.txt
-/input.txt
+/txt/input_bckp.txt
+/txt/input.txt
 /new_cards.txt
 /new_cards_backup.txt
-/code input.txt
-/new cards.txt
-/new cards backup.txt
-/code input backup.txt
+/txt/code_input.txt
+/txt/new_cards.txt
+/txt/new_cards_backup.txt
+/txt/code_input backup.txt

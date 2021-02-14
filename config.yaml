@@ -9,10 +9,10 @@ target deck: IT
 input file: input.txt
 
 # Source material for code-based cards (handled differently)
-code input file: code input.txt
+code input file: code_input.txt
 
 # File for new cards (in text format, can be imported to Anki)
-cards output file: new cards.txt
+cards output file: new_cards.txt
 
 # Backup file for previously generated new cards (in text format, can be imported to Anki)
-cards output backup file: new cards backup.txt
+cards output backup file: new_cards_backup.txt
