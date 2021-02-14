@@ -30,7 +30,16 @@ def make_notes(
         deck_name: str = 'experimental',
         print_notes: bool = False,
         add_to_anki: bool = True,
-):
+) -> list:
+    """
+    fields_nested looks something like this:
+    (
+        ('question 1', 'answer 1', 'question 2', 'answer 2'),
+        ('question 1', 'answer 1', 'question 2', 'answer 2', 'question 3', 'answer 3'),
+        ('question 1', 'answer 1'),
+    )
+    Return notes in the format Anki accepts (for testing purposes).
+    """
     notes = []
     for fields in fields_nested:
         note = {'deckName': deck_name}

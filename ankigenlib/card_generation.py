@@ -1,6 +1,6 @@
 import re
 
-import term_extraction
+from ankigenlib import term_extraction
 
 ####################################################################################################
 # Constants

@@ -1,4 +1,4 @@
-from setup import nlp
+from ankigenlib.setup import nlp
 
 
 def clean_text_for_anki_import(text: str) -> str:

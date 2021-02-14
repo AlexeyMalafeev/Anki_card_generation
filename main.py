@@ -4,13 +4,14 @@ import re
 import sys
 from urllib.error import URLError
 
-import anki_connect
-import card_generation
-from setup import config
-import text_processing
-import ui
+from ankigenlib import anki_connect
+from ankigenlib import card_generation
+from ankigenlib.setup import config
+from ankigenlib import text_processing
+from ankigenlib import ui
 
-# todo multi-field cards from text file (blank lines separate notes)
+# todo warn at the beginning if Anki is not opened
+# todo "txt" folder
 # todo bug: when editing a snippet, no need for post-edit processing (Java -> java at the beginning of a snippet)
 # low-priority todo add statistics
 
@@ -18,8 +19,8 @@ import ui
 class MainFlow:
 
     def __init__(self, config):
-        input_text = Path('..', config['input file']).read_text(encoding='utf-8')
-        code_input_text = Path('..', config['code input file']).read_text(encoding='utf-8')
+        input_text = Path('', config['input file']).read_text(encoding='utf-8')
+        code_input_text = Path('', config['code input file']).read_text(encoding='utf-8')
 
         self.sentences = tuple()
         self.codes = tuple()
@@ -36,12 +37,12 @@ class MainFlow:
 
         self.target_anki_deck = config['target deck']
 
-        self.cards_path = Path('..', config['cards output file'])
+        self.cards_path = Path('', config['cards output file'])
         backup_text = self.cards_path.read_text(encoding='utf-8')
-        self.backup_path = Path('..', config['cards output backup file'])
+        self.backup_path = Path('', config['cards output backup file'])
         self.backup_path.write_text(backup_text, encoding='utf-8')
         self.cards_path.write_text('', encoding='utf-8')
-        self.remaining_path = Path('..', config['input file'])
+        self.remaining_path = Path('', config['input file'])
 
         if input_text.strip() != '':
             self.preprocess_input_text(input_text)

@@ -17,7 +17,7 @@ rake_obj = RAKE.Rake(stop_words=stop_words)
 
 nlp = spacy.load('en_core_web_sm')
 
-config_path = Path('..', 'config.yaml')
+config_path = Path('config.yaml')
 config = yaml.safe_load(config_path.read_text())
 
 print("Config:")

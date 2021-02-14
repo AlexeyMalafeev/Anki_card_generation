@@ -1,4 +1,4 @@
-from setup import combo_basic, nlp, rake_obj
+from ankigenlib.setup import combo_basic, nlp, rake_obj
 
 
 def get_keywords(text: str, min_freq: int = 2) -> tuple:
