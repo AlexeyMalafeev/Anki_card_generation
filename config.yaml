@@ -2,7 +2,7 @@
 # Leave `target deck` empty if you don't want to send cards to Anki via Anki Connect API.
 # Then, cards will only be exported as a text file.
 #target deck: IT
-target deck: IT
+target deck: 
 
 # ---Files---
 # Source material for regular cards (non-code, just text that will be split into sentences)
