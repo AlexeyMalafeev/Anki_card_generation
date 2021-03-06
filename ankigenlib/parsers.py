@@ -4,13 +4,23 @@ class BaseParser:
         self.set_input(path_to_input)
         self.notes: list = []  # nested: [(q1, a1, q2, a2, ...), (q1, a1, q2, a2, ...), ...]
         self.cards: list = []  # flat: [question1, answer1, question2, answer2, ...]
+        self.current_line: str = ''
+        self.question: str = ''
+        self.answer: str = ''
 
-    def add_card(self, question, answer):
-        self.cards.extend([question, answer])
+    def add_card(self):
+        self.cards.extend([self.question, self.answer])
+        self.question = self.answer = ''
+
+    def add_card_condition(self):
+        raise NotImplementedError
 
     def add_note(self):
         self.notes.append(tuple(self.cards))
         self.cards = []
+
+    def add_note_condition(self):
+        raise NotImplementedError
 
     def after_parse(self):
         pass
@@ -18,23 +28,30 @@ class BaseParser:
     def before_parse(self):
         pass
 
+    def format_card(self):
+        raise NotImplementedError
+
     def parse(self) -> tuple:
         self.before_parse()
         with open(self.path_to_input) as f_in:
             for line in f_in:
-                line = self.preprocess_line(line)
-                self.process_line(line)
+                self.current_line = line
+                self.preprocess_line()
+                if self.skip_line_condition():
+                    continue
+                elif self.add_card_condition():
+                    self.format_card()
+                    self.add_card()
+                elif self.add_note_condition():
+                    self.add_note()
         self.after_parse()
         return tuple(self.notes)
 
-    @staticmethod
-    def preprocess_line(line):
-        return line.strip()
-
-    def process_line(self, line):
-        raise NotImplementedError
+    def preprocess_line(self):
+        self.current_line = self.current_line.strip()
 
     def set_input(self, path_to_input):
         self.path_to_input = path_to_input
 
-
+    def skip_line_condition(self):
+        raise NotImplementedError
