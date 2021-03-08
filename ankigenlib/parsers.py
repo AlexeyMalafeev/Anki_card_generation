@@ -23,6 +23,8 @@ class BaseParser:
         raise NotImplementedError
 
     def after_parse(self):
+        if self.cards:
+            self.add_note()
         self.notes = tuple(self.notes)
 
     def before_parse(self):
@@ -62,4 +64,3 @@ class TabSeparatedQA(BaseParser):
 
     def format_card(self):
         self.question, self.answer = self.current_line.split('\t')
-
