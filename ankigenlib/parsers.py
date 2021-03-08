@@ -23,10 +23,11 @@ class BaseParser:
         raise NotImplementedError
 
     def after_parse(self):
-        pass
+        self.notes = tuple(self.notes)
 
     def before_parse(self):
-        pass
+        self.notes = []
+        self.cards = []
 
     def format_card(self):
         raise NotImplementedError
