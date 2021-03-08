@@ -64,3 +64,11 @@ class TabSeparatedQA(BaseParser):
 
     def format_card(self):
         self.question, self.answer = self.current_line.split('\t')
+
+
+class AngleBracketsQA(BaseParser):
+    pass
+
+
+class IndentedQA(BaseParser):
+    pass

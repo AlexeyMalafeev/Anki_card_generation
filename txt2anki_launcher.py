@@ -1,11 +1,17 @@
 import os
 
+from ankigenlib.txt2anki import ankify, PARSE_MODES
+from ankigenlib.ui import menu
 
-from ankigenlib import txt2anki
 
+parse_mode = menu(
+    options=tuple(sorted(PARSE_MODES.keys())),
+    title='Choose a parsing mode:',
+)
+input_path = os.path.join('txt', f'{parse_mode}_input.txt')
 
-input_path = os.path.join('txt', 'txt2anki_input.txt')
-txt2anki.ankify(
-    input_txt_file_name=input_path,
+ankify(
+    input_path=input_path,
+    parse_mode=parse_mode,
     target_deck='IT',
 )
