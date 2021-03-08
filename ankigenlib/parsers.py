@@ -37,9 +37,7 @@ class BaseParser:
             for line in f_in:
                 self.current_line = line
                 self.preprocess_line()
-                if self.skip_line_condition():
-                    continue
-                elif self.add_card_condition():
+                if self.add_card_condition():
                     self.format_card()
                     self.add_card()
                 elif self.add_note_condition():
@@ -53,5 +51,14 @@ class BaseParser:
     def set_input(self, path_to_input):
         self.path_to_input = path_to_input
 
-    def skip_line_condition(self):
-        raise NotImplementedError
+
+class TabSeparatedQA(BaseParser):
+    def add_card_condition(self):
+        return self.current_line != ''
+
+    def add_note_condition(self):
+        return self.current_line == ''
+
+    def format_card(self):
+        self.question, self.answer = self.current_line.split('\t')
+
