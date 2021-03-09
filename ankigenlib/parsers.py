@@ -1,7 +1,11 @@
+import re
+
+
 class BaseParser:
+    """Single use only"""
     def __init__(self, path_to_input):
         self.path_to_input: str = ''
-        self.set_input(path_to_input)
+        self.path_to_input = path_to_input
         self.notes: list = []  # nested: [(q1, a1, q2, a2, ...), (q1, a1, q2, a2, ...), ...]
         self.cards: list = []  # flat: [question1, answer1, question2, answer2, ...]
         self.current_line: str = ''
@@ -25,11 +29,9 @@ class BaseParser:
     def after_parse(self):
         if self.cards:
             self.add_note()
-        self.notes = tuple(self.notes)
 
     def before_parse(self):
-        self.notes = []
-        self.cards = []
+        pass
 
     def format_card(self):
         raise NotImplementedError
@@ -51,9 +53,6 @@ class BaseParser:
     def preprocess_line(self):
         self.current_line = self.current_line.strip()
 
-    def set_input(self, path_to_input):
-        self.path_to_input = path_to_input
-
 
 class TabSeparatedQA(BaseParser):
     def add_card_condition(self):
@@ -67,8 +66,47 @@ class TabSeparatedQA(BaseParser):
 
 
 class AngleBracketsQA(BaseParser):
-    pass
+    def __init__(self, path_to_input):
+        super().__init__(path_to_input)
+        self.questions_to_add = []  # whatever is between angle brackets:
+                                    # [(start, end, "word_or_phrase"), ...]
 
+    def add_card(self):
+
+        self.current_line = re.sub(r'<|>\d{0,2}', '', self.current_line)
+
+    def add_card_condition(self):
+        return self.current_line != ''
+
+    def add_note(self):
+
+
+    def add_note_condition(self):
+        return self.current_line == ''
+
+    def format_card(self):
+        for start, end, target in self.questions_to_add:
+
+        self.question, self.answer = self.current_line.split('\t')
+
+    def preprocess_line(self):
+        super().preprocess_line()
+        if '<' in self.current_line:
+            matches = re.finditer(r'<.+>\d{0,2}', self.current_line)
+            self.questions_to_add = []
+            for match in matches:
+                start, end = match.span()
+                target = self.current_line[start:end]
+                q_clean =
+                self.questions_to_add.append((start, end, target))
+            self.questions_to_add.reverse()  # for adding cards in correct order
 
 class IndentedQA(BaseParser):
-    pass
+    def add_card_condition(self):
+        pass
+
+    def add_note_condition(self):
+        pass
+
+    def format_card(self):
+        pass

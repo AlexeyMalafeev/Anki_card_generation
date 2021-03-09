@@ -16,10 +16,10 @@ def ankify(
 ) -> list:
     parser_class = PARSE_MODES[parse_mode]
     parser = parser_class(input_path)
-    parser.parse()
+    notes = parser.parse()
 
     return anki_connect.make_notes(
-        fields_nested=parser.notes,
+        fields_nested=notes,
         deck_name=target_deck,
         print_notes=True,
         add_to_anki=True
