@@ -4,6 +4,7 @@ import re
 import sys
 from urllib.error import URLError
 
+import ankigenlib.gap_making
 from ankigenlib import anki_connect
 from ankigenlib import card_generation
 from ankigenlib.setup import config
@@ -279,8 +280,8 @@ class MainFlow:
             target = input('Input target word or phrase: ').lower()
             if target in snippet_lower:
                 break
-        gap = card_generation.PHRASE_GAP if ' ' in target else card_generation.WORD_GAP
-        question, orig_answer = card_generation.make_gap(
+        gap = ankigenlib.gap_making.choose_gap(target)
+        question, orig_answer = ankigenlib.gap_making.make_gap(
             text=self.curr_snippet,
             text_lower=snippet_lower,
             target=target,

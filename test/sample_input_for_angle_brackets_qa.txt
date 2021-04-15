@@ -1,4 +1,4 @@
-<regression testing> is re-running <functional>1 and <non-functional>1 tests to ensure that previously developed and tested software <still performs> after a change; if not, that would be called a <regression>
+<regression testing> is re-running 1<functional> and 1<non-functional> tests to ensure that previously developed and tested software <still performs> after a change; if not, that would be called a <regression>
 
 changes that may require regression testing include <bug fixes>, <software enhancements>, <configuration changes>, and even substitution of <electronic components>
 

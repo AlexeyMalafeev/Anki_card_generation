@@ -1,6 +1,15 @@
 import re
 
 
+from ankigenlib import gap_making
+
+
+NOTE_SEP_FOR_ANGLE_BR_QA = '---'
+PTRN_ANGLE_BRACKETS_CAPTURE = r'\D(<.+?>)'
+PTRN_ANGLE_BRACKETS_CAPTURE_NUMBERED = r'\d{1,2}<.+?>'
+PTRN_ANGLE_BRACKETS_REPLACE = r'\d{0,2}<|>'
+
+
 class BaseParser:
     """Single use only"""
     def __init__(self, path_to_input):
@@ -68,40 +77,37 @@ class TabSeparatedQA(BaseParser):
 class AngleBracketsQA(BaseParser):
     def __init__(self, path_to_input):
         super().__init__(path_to_input)
-        self.questions_to_add = []  # whatever is between angle brackets:
-                                    # [(start, end, "word_or_phrase"), ...]
+        self.cards_to_add = []  # [q1, a1, q2, a2, q3, a3, ...]
 
     def add_card(self):
-
-        self.current_line = re.sub(r'<|>\d{0,2}', '', self.current_line)
+        self.cards.extend(self.cards_to_add)
+        self.cards_to_add = []
 
     def add_card_condition(self):
-        return self.current_line != ''
-
-    def add_note(self):
-
+        return '<' in self.current_line
 
     def add_note_condition(self):
-        return self.current_line == ''
+        return self.current_line == NOTE_SEP_FOR_ANGLE_BR_QA
 
     def format_card(self):
-        for start, end, target in self.questions_to_add:
+        line = self.current_line
+        line_clean = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', line)
+        line_clean_lower = line_clean.lower()
+        matches = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
+        matches_numbered = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
+        for match in matches_numbered:
+            pass  # todo handle numbered matches
+        for match in matches:
+            start, end = match.span()
+            answer = line[start:end]
+            answer = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', answer)
+            gap = gap_making.get_gap(answer)
+            # todo get previous word before gap and a/an -> a(n)
+            question = line[:start] + gap + line[end:]
+            self.cards_to_add.extend([question, answer])
 
-        self.question, self.answer = self.current_line.split('\t')
 
-    def preprocess_line(self):
-        super().preprocess_line()
-        if '<' in self.current_line:
-            matches = re.finditer(r'<.+>\d{0,2}', self.current_line)
-            self.questions_to_add = []
-            for match in matches:
-                start, end = match.span()
-                target = self.current_line[start:end]
-                q_clean =
-                self.questions_to_add.append((start, end, target))
-            self.questions_to_add.reverse()  # for adding cards in correct order
-
-class IndentedQA(BaseParser):
+class IndentedQA(BaseParser):  # todo IndentedQA
     def add_card_condition(self):
         pass
 
