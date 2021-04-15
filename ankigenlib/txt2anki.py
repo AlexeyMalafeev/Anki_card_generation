@@ -1,3 +1,4 @@
+from pathlib import Path
 from pprint import pp
 
 
@@ -14,7 +15,7 @@ PARSE_MODES = {
 
 
 def ankify(
-        input_path: str,
+        input_path: Path,
         parse_mode: str,  # 'tabs' | 'angle' | 'indent'
         target_deck: str = '',
         ask_before_adding: bool = False,
@@ -24,9 +25,14 @@ def ankify(
     notes = parser.parse()
 
     if ask_before_adding:
-        pp(notes)
+        pp(notes)  # todo better preview of notes
+        n_notes = len(notes)
+        n_cards = sum(len(n) for n in notes) // 2
+        hint = f'\nAdd these {n_cards} cards as {n_notes} notes to {target_deck}?'
+    else:
+        hint = ''
 
-    if not ask_before_adding or ui.yn(f'\nAdd these {len(notes)} notes to {target_deck}?'):
+    if not ask_before_adding or ui.yn(hint):
         return anki_connect.make_notes(
             fields_nested=notes,
             deck_name=target_deck,
