@@ -5,7 +5,7 @@ from ankigenlib import gap_making
 
 
 NOTE_SEP_FOR_ANGLE_BR_QA = '---'
-PTRN_ANGLE_BRACKETS_CAPTURE = r'\D(<.+?>)'
+PTRN_ANGLE_BRACKETS_CAPTURE = r'<.+?>'
 PTRN_ANGLE_BRACKETS_CAPTURE_NUMBERED = r'\d{1,2}<.+?>'
 PTRN_ANGLE_BRACKETS_REPLACE = r'\d{0,2}<|>'
 
@@ -91,8 +91,6 @@ class AngleBracketsQA(BaseParser):
 
     def format_card(self):
         line = self.current_line
-        line_clean = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', line)
-        line_clean_lower = line_clean.lower()
         matches = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
         matches_numbered = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
         for match in matches_numbered:
@@ -104,6 +102,7 @@ class AngleBracketsQA(BaseParser):
             gap = gap_making.get_gap(answer)
             # todo get previous word before gap and a/an -> a(n)
             question = line[:start] + gap + line[end:]
+            question = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', question)
             self.cards_to_add.extend([question, answer])
 
 

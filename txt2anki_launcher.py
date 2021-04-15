@@ -14,4 +14,5 @@ ankify(
     input_path=input_path,
     parse_mode=parse_mode,
     target_deck='IT',
+    ask_before_adding=True,
 )

@@ -13,6 +13,7 @@ def before_gap(prev_word):
 
 
 def choose_gap(target):
+    # todo more sophisticated gap choosing logic
     return PHRASE_GAP if ' ' in target else WORD_GAP
 
 
