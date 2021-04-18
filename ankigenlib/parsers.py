@@ -101,9 +101,9 @@ class AngleBracketsQA(BaseParser):
             answer = line[start:end]
             answer = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', answer)
             gap = gap_making.get_gap(answer)
-            # todo get previous word before gap and a/an -> a(n)
             question = line[:start] + gap + line[end:]
             question = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', question)
+            # todo postprocess previous word before gap and a/an -> a(n)
             self.cards_to_add.extend([question, answer])
 
 
