@@ -1,9 +1,10 @@
-import os
 from pathlib import Path
 
 from ankigenlib.txt2anki import ankify, PARSE_MODES
 from ankigenlib.ui import menu, yn
 
+# todo document this in README.md
+# todo add machine learning for question prediction (as entity)
 
 parse_mode = menu(
     options=tuple(sorted(PARSE_MODES.keys())),

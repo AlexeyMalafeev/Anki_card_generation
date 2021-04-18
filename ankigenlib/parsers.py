@@ -2,6 +2,7 @@ import re
 
 
 from ankigenlib import gap_making
+from ankigenlib import text_processing
 
 
 NOTE_SEP_FOR_ANGLE_BR_QA = '---'
@@ -90,8 +91,7 @@ class AngleBracketsQA(BaseParser):
         return self.current_line == NOTE_SEP_FOR_ANGLE_BR_QA
 
     def format_card(self):
-        # todo lowercase first word and remove trailing '.'
-        line = self.current_line
+        line = text_processing.format_line_for_question(self.current_line)
         matches = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
         matches_numbered = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
         for match in matches_numbered:

@@ -7,6 +7,18 @@ def clean_text_for_anki_import(text: str) -> str:
     return text
 
 
+def format_line_for_question(line: str) -> str:
+    line_words = line.split()
+    first_word = line_words[0]
+    last_word = line_words[-1]
+    if first_word.isalpha() and first_word.istitle():
+        first_word = first_word.lower()
+    if last_word.endswith('.'):
+        last_word = last_word[:-1]
+    line = ' '.join([first_word] + line_words[1:-1] + [last_word])
+    return line
+
+
 def format_snippet_for_anki(snippet: str) -> str:
     if not snippet.strip():
         return ''
