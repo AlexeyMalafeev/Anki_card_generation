@@ -18,17 +18,20 @@ def auto_a_before_gap(text: str) -> str:
 
 
 def choose_gap(target):
-    # todo more sophisticated gap choosing logic
+    # todo consider not using (?) but always unwrap instead: _____ _____ _____
     return PHRASE_GAP if ' ' in target else WORD_GAP
 
 
 def get_gap(target):
     gap = choose_gap(target)
+    if '-' in target and ' ' not in target:
+        gap = WORD_GAP + ('-' + WORD_GAP) * target.count('-')
     gap = enhance_gap(gap, target)
     return gap
 
 
 def enhance_gap(gap, target):
+    # todo handle (?) gaps differently, don't replace or unwrap into _____ _____ing etc.
     if target.endswith('s'):
         gap += 's'
     elif target.endswith('ed'):

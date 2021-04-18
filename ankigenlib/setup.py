@@ -2,7 +2,7 @@ from pathlib import Path
 from pprint import pprint
 
 # noinspection PyUnresolvedReferences
-from pyate import combo_basic
+from pyate import combo_basic  # todo this crashes with spaCy 3
 # noinspection PyPackageRequirements
 import RAKE
 import spacy

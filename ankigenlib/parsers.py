@@ -1,14 +1,18 @@
+from collections import defaultdict
 import re
 
 
 from ankigenlib import gap_making
-from ankigenlib import text_processing
 
 
 NOTE_SEP_FOR_ANGLE_BR_QA = '---'
 PTRN_ANGLE_BRACKETS_CAPTURE = r'<.+?>'
 PTRN_ANGLE_BRACKETS_CAPTURE_NUMBERED = r'\d{1,2}<.+?>'
-PTRN_ANGLE_BRACKETS_REPLACE = r'\d{0,2}<|>'
+PTRN_ANGLE_BRACKETS_REPLACE = r'<|>'
+PTRN_ANGLE_BRACKETS_NUMBERED_REPLACE = r'\d{1,2}<|>'
+PTRN_ANGLE_BRACKETS_NUMBERED_LEFT1_REPLACE = r'\d<'
+PTRN_ANGLE_BRACKETS_NUMBERED_LEFT2_REPLACE = r'\d\d<'
+PTRN_ANGLE_BRACKETS_CATCHALL_REPLACE = r'\d{0,2}<|>'
 
 
 class BaseParser:
@@ -91,11 +95,38 @@ class AngleBracketsQA(BaseParser):
         return self.current_line == NOTE_SEP_FOR_ANGLE_BR_QA
 
     def format_card(self):
-        line = text_processing.format_line_for_question(self.current_line)
+        # todo refactor AngleBracketsQA.format_card
+        line = self.format_line_for_question(self.current_line)
+        matches_numbered = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE_NUMBERED, line)
+        matchnum_dict = defaultdict(list)
+        for matchnum in matches_numbered:
+            start, end = matchnum.span()
+            m_text = line[start:end]
+            digits = re.findall(r'\d+', m_text)[0]
+            matchnum_dict[digits].append(matchnum)
+        # line_with_spaces = line
+        for digit, matchnums in matchnum_dict.items():
+            question = line
+            prev_answer = ''
+            answers = []
+            for matchnum in reversed(matchnums):
+                start, end = matchnum.span()
+                answer = question[start:end]
+                # answer_with_spaces = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_REPLACE, ' ', answer)
+                # line_with_spaces = line[:start] + answer_with_spaces + line[end:]
+                answer = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_REPLACE, '', answer)
+                if answer != prev_answer:
+                    answers.append(answer)
+                    prev_answer = answer
+                gap = gap_making.get_gap(answers[-1])
+                question = question[:start] + gap + question[end:]
+            answer = '<br>'.join(reversed(answers))
+            question = re.sub(PTRN_ANGLE_BRACKETS_CATCHALL_REPLACE, '', question)
+            question = gap_making.auto_a_before_gap(question)
+            self.cards_to_add.extend([question, answer])
+        line = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_LEFT2_REPLACE, '  ', line)
+        line = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_LEFT1_REPLACE, ' ', line)
         matches = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
-        matches_numbered = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
-        for match in matches_numbered:
-            pass  # todo handle numbered matches
         for match in matches:
             start, end = match.span()
             answer = line[start:end]
@@ -103,8 +134,22 @@ class AngleBracketsQA(BaseParser):
             gap = gap_making.get_gap(answer)
             question = line[:start] + gap + line[end:]
             question = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', question)
-            # todo postprocess previous word before gap and a/an -> a(n)
+            question = re.sub(' {2,}', ' ', question)
+            # question = gap_making.auto_a_before_gap(question)
             self.cards_to_add.extend([question, answer])
+
+    # low-prio todo move format_line_for_question to another module
+    @staticmethod
+    def format_line_for_question(line: str) -> str:
+        line_words = line.split()
+        first_word = line_words[0]
+        last_word = line_words[-1]
+        if first_word.isalpha() and first_word.istitle():
+            first_word = first_word.lower()
+        if last_word.endswith('.'):
+            last_word = last_word[:-1]
+        line = ' '.join([first_word] + line_words[1:-1] + [last_word])
+        return line
 
 
 class IndentedQA(BaseParser):  # todo IndentedQA
