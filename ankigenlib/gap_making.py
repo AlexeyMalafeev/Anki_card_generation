@@ -32,14 +32,16 @@ def get_gap(target):
 
 def enhance_gap(gap, target):
     # todo handle (?) gaps differently, don't replace or unwrap into _____ _____ing etc.
-    if target.endswith('s'):
-        gap += 's'
-    elif target.endswith('ed'):
+    if target.endswith('ed'):
         gap += 'ed'
     elif target.endswith('ly'):
         gap += 'ly'
     elif target.endswith('tion'):
         gap += 'tion'
+    elif target.endswith('tions'):
+        gap += 'tions'
+    elif target.endswith('s'):
+        gap += 's'
     elif target.endswith('able'):
         gap += 'able'
     elif target.endswith('ing'):
@@ -65,8 +67,10 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
 
 def make_gaps_by_spans(text: str, *spans) -> (str, str):
     answers = []
+    answer = ''
     prev_answer = ''
     question = text
+    gaps = []
     for span in spans:
         start, end = span
         answer = text[start:end]
@@ -74,6 +78,12 @@ def make_gaps_by_spans(text: str, *spans) -> (str, str):
             answers.append(answer)
             prev_answer = answer
         gap = get_gap(answer)
+        gaps.append(gap)
+    spans = reversed(spans)
+    gaps = reversed(gaps)
+    for span, gap in zip(spans, gaps):
+        start, end = span
         question = question[:start] + gap + question[end:]
     question = auto_a_before_gap(question)
+    answer = '<br>'.join(answers)
     return question, answer
