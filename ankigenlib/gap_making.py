@@ -17,21 +17,17 @@ def auto_a_before_gap(text: str) -> str:
     return text
 
 
-def choose_gap(target):
-    # todo consider not using (?) but always unwrap instead: _____ _____ _____
-    return PHRASE_GAP if ' ' in target else WORD_GAP
-
-
 def get_gap(target):
-    gap = choose_gap(target)
-    if '-' in target and ' ' not in target:
+    gaps = []
+    for targ in target.split():
+        gaps.append(_enhance_gap(targ))
+    return ' '.join(gaps)
+
+
+def _enhance_gap(target):
+    gap = WORD_GAP
+    if '-' in target:
         gap = WORD_GAP + ('-' + WORD_GAP) * target.count('-')
-    gap = enhance_gap(gap, target)
-    return gap
-
-
-def enhance_gap(gap, target):
-    # todo handle (?) gaps differently, don't replace or unwrap into _____ _____ing etc.
     if target.endswith('ed'):
         gap += 'ed'
     elif target.endswith('ly'):
@@ -67,7 +63,6 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
 
 def make_gaps_by_spans(text: str, *spans) -> (str, str):
     answers = []
-    answer = ''
     prev_answer = ''
     question = text
     gaps = []
