@@ -127,8 +127,8 @@ class AngleBracketsQA(BaseParser):
         line_words = line.split()
         first_word = line_words[0]
         last_word = line_words[-1]
-        if first_word.isalpha() and first_word.istitle():
-            first_word = first_word.lower()
+        # if first_word.isalpha() and first_word.istitle():
+        #     first_word = first_word.lower()
         if last_word.endswith('.'):
             last_word = last_word[:-1]
         line = ' '.join([first_word] + line_words[1:-1] + [last_word])
