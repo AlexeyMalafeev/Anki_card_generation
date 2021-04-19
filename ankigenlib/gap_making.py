@@ -61,3 +61,19 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
         text = text[:start] + gap + text[end:]
     text = auto_a_before_gap(text)
     return text, orig_target
+
+
+def make_gaps_by_spans(text: str, *spans) -> (str, str):
+    answers = []
+    prev_answer = ''
+    question = text
+    for span in spans:
+        start, end = span
+        answer = text[start:end]
+        if answer != prev_answer:
+            answers.append(answer)
+            prev_answer = answer
+        gap = get_gap(answer)
+        question = question[:start] + gap + question[end:]
+    question = auto_a_before_gap(question)
+    return question, answer

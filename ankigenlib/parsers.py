@@ -6,13 +6,7 @@ from ankigenlib import gap_making
 
 
 NOTE_SEP_FOR_ANGLE_BR_QA = '---'
-PTRN_ANGLE_BRACKETS_CAPTURE = r'<.+?>'
-PTRN_ANGLE_BRACKETS_CAPTURE_NUMBERED = r'\d{1,2}<.+?>'
-PTRN_ANGLE_BRACKETS_REPLACE = r'<|>'
-PTRN_ANGLE_BRACKETS_NUMBERED_REPLACE = r'\d{1,2}<|>'
-PTRN_ANGLE_BRACKETS_NUMBERED_LEFT1_REPLACE = r'\d<'
-PTRN_ANGLE_BRACKETS_NUMBERED_LEFT2_REPLACE = r'\d\d<'
-PTRN_ANGLE_BRACKETS_CATCHALL_REPLACE = r'\d{0,2}<|>'
+PTRN_ANGLE_BRACKETS = r'\w?<.+?>'
 
 
 class BaseParser:
@@ -83,6 +77,9 @@ class AngleBracketsQA(BaseParser):
     def __init__(self, path_to_input):
         super().__init__(path_to_input)
         self.cards_to_add = []  # [q1, a1, q2, a2, q3, a3, ...]
+        self.normal_spans = []
+        self.numbered_spans = defaultdict(list)
+        self.clean_line = ''
 
     def add_card(self):
         self.cards.extend(self.cards_to_add)
@@ -95,50 +92,36 @@ class AngleBracketsQA(BaseParser):
         return self.current_line == NOTE_SEP_FOR_ANGLE_BR_QA
 
     def format_card(self):
-        # todo refactor AngleBracketsQA.format_card
-        line = self.format_line_for_question(self.current_line)
-        matches_numbered = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE_NUMBERED, line)
-        matchnum_dict = defaultdict(list)
-        for matchnum in matches_numbered:
-            start, end = matchnum.span()
-            m_text = line[start:end]
-            digits = re.findall(r'\d+', m_text)[0]
-            matchnum_dict[digits].append(matchnum)
-        # line_with_spaces = line
-        for digit, matchnums in matchnum_dict.items():
-            question = line
-            prev_answer = ''
-            answers = []
-            for matchnum in reversed(matchnums):
-                start, end = matchnum.span()
-                answer = question[start:end]
-                # answer_with_spaces = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_REPLACE, ' ', answer)
-                # line_with_spaces = line[:start] + answer_with_spaces + line[end:]
-                answer = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_REPLACE, '', answer)
-                if answer != prev_answer:
-                    answers.append(answer)
-                    prev_answer = answer
-                gap = gap_making.get_gap(answers[-1])
-                question = question[:start] + gap + question[end:]
-            answer = '<br>'.join(reversed(answers))
-            question = re.sub(PTRN_ANGLE_BRACKETS_CATCHALL_REPLACE, '', question)
-            question = gap_making.auto_a_before_gap(question)
-            self.cards_to_add.extend([question, answer])
-        line = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_LEFT2_REPLACE, '  ', line)
-        line = re.sub(PTRN_ANGLE_BRACKETS_NUMBERED_LEFT1_REPLACE, ' ', line)
-        matches = re.finditer(PTRN_ANGLE_BRACKETS_CAPTURE, line)
-        for match in matches:
-            start, end = match.span()
-            answer = line[start:end]
-            answer = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', answer)
-            gap = gap_making.get_gap(answer)
-            question = line[:start] + gap + line[end:]
-            question = re.sub(PTRN_ANGLE_BRACKETS_REPLACE, '', question)
-            question = re.sub(' {2,}', ' ', question)
-            # question = gap_making.auto_a_before_gap(question)
-            self.cards_to_add.extend([question, answer])
+        self.current_line = self.format_line_for_question(self.current_line)
+        self.find_spans()
+        self.make_gaps()
 
-    # low-prio todo move format_line_for_question to another module
+    def find_spans(self):
+        self.numbered_spans = defaultdict(list)
+        self.normal_spans = []
+        line = self.current_line
+        self.clean_line = ''
+        matches = re.finditer(PTRN_ANGLE_BRACKETS, line)
+        offset = 0
+        prev_end = 0
+        for m in matches:
+            start, end = m.span()
+            self.clean_line += line[prev_end:start]
+            m_text = line[start:end]
+            if m_text.startswith('<'):
+                diff = 2
+                target_list = self.normal_spans
+            else:
+                diff = 3
+                m_id = m_text[0]
+                target_list = self.numbered_spans[m_id]
+            target_list.append((start - offset, end - offset - diff))
+            self.clean_line += m_text[diff - 1:-1]
+            offset += diff
+            prev_end = end
+        self.clean_line += line[prev_end:]
+
+    # low-prio todo move format_line_for_question to another module, it's general
     @staticmethod
     def format_line_for_question(line: str) -> str:
         line_words = line.split()
@@ -150,6 +133,14 @@ class AngleBracketsQA(BaseParser):
             last_word = last_word[:-1]
         line = ' '.join([first_word] + line_words[1:-1] + [last_word])
         return line
+
+    def make_gaps(self):
+        for span in self.normal_spans:
+            question, answer = gap_making.make_gaps_by_spans(self.clean_line, span)
+            self.cards_to_add.extend([question, answer])
+        for m_id, spans in self.numbered_spans.items():
+            question, answer = gap_making.make_gaps_by_spans(self.clean_line, *spans)
+            self.cards_to_add.extend([question, answer])
 
 
 class IndentedQA(BaseParser):  # todo IndentedQA
