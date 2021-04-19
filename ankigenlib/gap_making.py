@@ -1,5 +1,9 @@
 import re
 
+
+DO_NOT_REPLACE = set('a an and at by in on or up'.split())
+
+
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'
 
@@ -32,6 +36,10 @@ def _enhance_gap(target):
         gap += 'ed'
     elif target.endswith('ly'):
         gap += 'ly'
+    elif target.endswith('less'):
+        gap += 'less'
+    elif target.endswith('ty'):
+        gap += 'ty'
     elif target.endswith('tion'):
         gap += 'tion'
     elif target.endswith('tions'):
@@ -42,6 +50,8 @@ def _enhance_gap(target):
         gap += 'able'
     elif target.endswith('ing'):
         gap += 'ing'
+    elif target in DO_NOT_REPLACE:
+        gap = target
     return gap
 
 
