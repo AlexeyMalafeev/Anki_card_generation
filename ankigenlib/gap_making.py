@@ -1,7 +1,7 @@
 import re
 
 
-DO_NOT_REPLACE = set('a an and at by in on or up'.split())
+DO_NOT_REPLACE = set('a an and at by in of on or to up'.split())
 
 
 PHRASE_GAP = '_____(?)'

@@ -12,10 +12,15 @@ parse_mode = menu(
 )
 input_path = Path('txt', f'{parse_mode}_input.txt')
 
+target_deck = menu(
+    options=('IT', 'Life'),
+    title='Choose the target deck:',
+)
+
 ankify(
     input_path=input_path,
     parse_mode=parse_mode,
-    target_deck='IT',
+    target_deck=target_deck,
     ask_before_adding=True,
 )
 

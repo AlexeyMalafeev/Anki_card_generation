@@ -46,7 +46,7 @@ class BaseParser:
 
     def parse(self) -> tuple:
         self.before_parse()
-        with open(self.path_to_input) as f_in:
+        with open(self.path_to_input, 'r', encoding='utf-8') as f_in:
             for line in f_in:
                 self.current_line = line
                 self.preprocess_line()
