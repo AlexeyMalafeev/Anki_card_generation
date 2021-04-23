@@ -1,7 +1,0 @@
-<regression testing> is re-running 1<functional> and 1<non-functional> tests to ensure that previously developed and tested software <still performs> after a change; if not, that would be called a <regression>
-
-changes that may require regression testing include <bug fixes>, <software enhancements>, <configuration changes>, and even substitution of <electronic components>
-
----
-
-<smoke testing> is preliminary testing to reveal <simple> failures severe enough to, for example, <reject> a prospective <software release>

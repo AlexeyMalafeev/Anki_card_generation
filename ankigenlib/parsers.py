@@ -1,4 +1,5 @@
 from collections import defaultdict
+from pathlib import Path
 import re
 
 
@@ -27,8 +28,7 @@ class BaseParser:
     Abstract, not instantiated.
     All children are single use only.
     """
-    def __init__(self, path_to_input):
-        self.path_to_input: str = ''
+    def __init__(self, path_to_input: Path):
         self.path_to_input = path_to_input
         self.notes: list = []  # nested: [(q1, a1, q2, a2, ...), (q1, a1, q2, a2, ...), ...]
         self.cards: list = []  # flat: [question1, answer1, question2, answer2, ...]
@@ -72,7 +72,7 @@ class BaseParser:
         return tuple(self.notes)
 
 
-class TabSeparatedQA(BaseParser):
+class TabSepParser(BaseParser):
     """
     One line = one card (tab-separated question and answer)
     Standard note separator
@@ -92,7 +92,7 @@ class TabSeparatedQA(BaseParser):
             self._add_card(question, answer)
 
 
-class AngleBracketsQA(BaseParser):
+class AngleBracketsParser(BaseParser):
     """
         One line = many cards (all answers are in angle brackets)
         Standard note separator
@@ -153,6 +153,6 @@ class AngleBracketsQA(BaseParser):
             self._add_card(question, answer)
 
 
-class CodeQA(BaseParser):
+class CodeParser(BaseParser):
     def _make_cards(self):
         pass

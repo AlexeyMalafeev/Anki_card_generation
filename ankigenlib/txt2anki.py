@@ -8,9 +8,9 @@ from ankigenlib import ui
 
 
 PARSE_MODES = {
-    'tabs': parsers.TabSeparatedQA,
-    'angle': parsers.AngleBracketsQA,
-    'code': parsers.CodeQA,
+    'tabs': parsers.TabSepParser,
+    'angle': parsers.AngleBracketsParser,
+    'code': parsers.CodeParser,
 }
 
 

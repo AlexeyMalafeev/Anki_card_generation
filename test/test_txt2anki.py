@@ -1,10 +1,10 @@
-import os
+from pathlib import Path
 
 from ankigenlib import txt2anki
 
 
 def test_ankify():
-    sample_file_path = os.path.join('test', 'sample_input_for_txt2anki.txt')
+    sample_file_path = Path('test', 'sample_inputs', 'txt2anki.txt')
     result = txt2anki.ankify(
         input_path=sample_file_path,
         parse_mode='tabs',
