@@ -10,7 +10,7 @@ from ankigenlib import ui
 PARSE_MODES = {
     'tabs': parsers.TabSeparatedQA,
     'angle': parsers.AngleBracketsQA,
-    'indent': parsers.IndentedQA,
+    'code': parsers.CodeQA,
 }
 
 
