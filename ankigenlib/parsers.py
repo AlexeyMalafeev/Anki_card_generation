@@ -6,6 +6,12 @@ import re
 from ankigenlib import gap_making
 
 
+CODE_ENDS_MARKER = '&CODE_ENDS&'
+CODE_STARTS_MARKER = '&CODE_STARTS&'
+CODE_ENDS_TAG = '</pre></code></span>'
+CODE_STARTS_TAG = '<span style="font-size:medium"><code align="left" style="color: green"><pre>'
+GT_MARKER = '&GT&'
+LT_MARKER = '&LT&'
 NOTE_SEPARATOR = '---'
 PTRN_ANGLE_BRACKETS = r'\w?<.+?>'
 
@@ -47,9 +53,9 @@ class BaseParser:
         if self.cards:
             self._add_note()
 
-    def _get_line_iter(self):
+    def _get_line_iter(self, stripper=str.strip):
         for line in self.current_snippet.split('\n'):
-            line = line.strip()
+            line = stripper(line)  # noqa
             if line:
                 yield line
 
@@ -74,8 +80,9 @@ class BaseParser:
 
 class TabSepParser(BaseParser):
     """
-    One line = one card (tab-separated question and answer)
-    Standard note separator
+    One line = one card.
+    Tab-separated question and answer.
+    Standard note separator.
 
     Example:
         question1\tanswer1
@@ -94,8 +101,9 @@ class TabSepParser(BaseParser):
 
 class AngleBracketsParser(BaseParser):
     """
-        One line = many cards (all answers are in angle brackets)
-        Standard note separator
+        One line = many cards.
+        All answers are in angle brackets.
+        Standard note separator.
         Multiple answers per card are supported with `1<...> ... 1<...>`, `2<...> ... 2<...>`, etc.
 
         Example:
@@ -104,7 +112,7 @@ class AngleBracketsParser(BaseParser):
             ---
             Twelve 1<thirteen> fourteen 1<fifteen> sixteen <seventeen>
             ...
-        """
+    """
     def __init__(self, path_to_input):
         super().__init__(path_to_input)
         # self.cards_to_add = []  # [q1, a1, q2, a2, q3, a3, ...]
@@ -153,6 +161,63 @@ class AngleBracketsParser(BaseParser):
             self._add_card(question, answer)
 
 
-class CodeParser(BaseParser):
+class CodeParser(AngleBracketsParser):
+    """
+        One snippet (not line) = many cards.
+        All answers are in angle brackets, but literal angle brackets can be escaped with `\`.
+        Multiple answers per card are supported with `1<...> ... 1<...>`, `2<...> ... 2<...>`, etc.
+        Standard note separator.
+        All code lines must start with a tab.
+
+        Example:
+            Cool Python code:
+                while <True>:
+                    print(<'love you'>)
+            ---
+            More cool code:
+                if 1<a> \< 1<b>:
+                    print('a is less than b')
+    """  # noqa
+    @staticmethod
+    def _finalize_question(question):
+        question = question.replace(CODE_STARTS_MARKER, CODE_STARTS_TAG)
+        question = question.replace(CODE_ENDS_MARKER, CODE_ENDS_TAG)
+        question = question.replace(LT_MARKER, '<')
+        question = question.replace(GT_MARKER, '>')
+        question = question.replace('\n', '<br>')
+        question = question.replace('\t', '  ')
+        return question
+
     def _make_cards(self):
-        pass
+        lines = []
+        is_code = False
+        for line in self._get_line_iter(stripper=str.rstrip):
+            if line.startswith('\t'):
+                line = line.replace('\t', '', 1)
+                if not is_code:
+                    is_code = True
+                    line = CODE_STARTS_MARKER + line
+            else:
+                if is_code:
+                    line = CODE_ENDS_MARKER + line
+                    is_code = False
+            line = line.replace(r'\<', LT_MARKER)
+            line = line.replace(r'\>', GT_MARKER)
+            lines.append(line)
+        self.current_line = '\n'.join(lines)
+        self._find_spans()
+        self._make_gaps()
+
+    def _make_gaps(self):
+        for span in self.normal_spans:
+            question, answer = gap_making.make_gaps_by_spans(
+                self.clean_line, span, forced_gap=gap_making.PHRASE_GAP
+            )
+            question = self._finalize_question(question)
+            self._add_card(question, answer)
+        for m_id, spans in self.numbered_spans.items():
+            question, answer = gap_making.make_gaps_by_spans(
+                self.clean_line, *spans, forced_gap=gap_making.PHRASE_GAP
+            )
+            question = self._finalize_question(question)
+            self._add_card(question, answer)

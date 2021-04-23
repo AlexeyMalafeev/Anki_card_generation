@@ -1,0 +1,7 @@
+Cool Python code:
+	while <True>:
+		print(<'love you'>)
+---
+More cool code:
+	if 1<a> \< 1<b>:
+		print('a is less than b')

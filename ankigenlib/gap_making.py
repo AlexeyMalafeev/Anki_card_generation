@@ -71,7 +71,7 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
     return text, orig_target
 
 
-def make_gaps_by_spans(text: str, *spans) -> (str, str):
+def make_gaps_by_spans(text: str, *spans, forced_gap=None) -> (str, str):
     answers = []
     prev_answer = ''
     question = text
@@ -82,7 +82,10 @@ def make_gaps_by_spans(text: str, *spans) -> (str, str):
         if answer != prev_answer:
             answers.append(answer)
             prev_answer = answer
-        gap = get_gap(answer)
+        if forced_gap is None:
+            gap = get_gap(answer)
+        else:
+            gap = forced_gap
         gaps.append(gap)
     spans = reversed(spans)
     gaps = reversed(gaps)
