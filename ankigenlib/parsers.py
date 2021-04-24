@@ -13,10 +13,11 @@ CODE_STARTS_TAG = '<span style="font-size:medium"><code align="left" style="colo
 GT_MARKER = '&GT&'
 LT_MARKER = '&LT&'
 NOTE_SEPARATOR = '---'
-PTRN_ANGLE_BRACKETS = r'\w?<.+?>'
+PTRN_ANGLE_BRACKETS = r'\d?<.+?>'
 
 
 def format_line_for_question(line: str) -> str:
+    line = line.replace('’', '\'')
     line_words = line.split()
     first_word = line_words[0]
     last_word = line_words[-1]
@@ -61,7 +62,8 @@ class BaseParser:
 
     def _get_snippet_iter(self):
         with open(self.path_to_input, 'r', encoding='utf-8') as f_in:
-            yield from f_in.read().split(NOTE_SEPARATOR)
+            yield from [content for content in f_in.read().split(NOTE_SEPARATOR)
+                        if not content.isspace()]
 
     def _iterate_over_snippets(self):
         for snippet in self._get_snippet_iter():
