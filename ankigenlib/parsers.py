@@ -12,20 +12,27 @@ CODE_ENDS_TAG = '</pre></code></span>'
 CODE_STARTS_TAG = '<span style="font-size:medium"><code align="left" style="color: green"><pre>'
 GT_MARKER = '&GT&'
 LT_MARKER = '&LT&'
+NEW_LINE_MARKER = '&NL&'
 NOTE_SEPARATOR = '---'
 PTRN_ANGLE_BRACKETS = r'\d?<.+?>'
 
 
+def finalize_question(question):
+    question = question.replace(CODE_STARTS_MARKER, CODE_STARTS_TAG)
+    question = question.replace(CODE_ENDS_MARKER, CODE_ENDS_TAG)
+    question = question.replace(LT_MARKER, '<')
+    question = question.replace(GT_MARKER, '>')
+    # question = question.replace('\n', '<br>')
+    question = question.replace(NEW_LINE_MARKER, '<br>')
+    question = question.replace('\t', '  ')
+    return question
+
+
 def format_line_for_question(line: str) -> str:
+    line = line.replace('<br>', '\n')
     line = line.replace('’', '\'')
-    line_words = line.split()
-    first_word = line_words[0]
-    last_word = line_words[-1]
-    # if first_word.isalpha() and first_word.istitle():
-    #     first_word = first_word.lower()
-    if last_word.endswith('.'):
-        last_word = last_word[:-1]
-    line = ' '.join([first_word] + line_words[1:-1] + [last_word])
+    if line.endswith('.'):
+        line = line[:-1]
     return line
 
 
@@ -157,16 +164,18 @@ class AngleBracketsParser(BaseParser):
     def _make_gaps(self):
         for span in self.normal_spans:
             question, answer = gap_making.make_gaps_by_spans(self.clean_line, span)
+            question = finalize_question(question)
             self._add_card(question, answer)
         for m_id, spans in self.numbered_spans.items():
             question, answer = gap_making.make_gaps_by_spans(self.clean_line, *spans)
+            question = finalize_question(question)
             self._add_card(question, answer)
 
 
 class CodeParser(AngleBracketsParser):
     """
         One snippet (not line) = many cards.
-        All answers are in angle brackets, but literal angle brackets can be escaped with `\`.
+        All answers are in angle brackets, but literal angle brackets can be escaped with \
         Multiple answers per card are supported with `1<...> ... 1<...>`, `2<...> ... 2<...>`, etc.
         Standard note separator.
         All code lines must start with a tab.
@@ -177,18 +186,9 @@ class CodeParser(AngleBracketsParser):
                     print(<'love you'>)
             ---
             More cool code:
-                if 1<a> \< 1<b>:
-                    print('a is less than b')
-    """  # noqa
-    @staticmethod
-    def _finalize_question(question):
-        question = question.replace(CODE_STARTS_MARKER, CODE_STARTS_TAG)
-        question = question.replace(CODE_ENDS_MARKER, CODE_ENDS_TAG)
-        question = question.replace(LT_MARKER, '<')
-        question = question.replace(GT_MARKER, '>')
-        question = question.replace('\n', '<br>')
-        question = question.replace('\t', '  ')
-        return question
+                code <code> code
+                <code code> code
+    """
 
     def _make_cards(self):
         lines = []
@@ -206,6 +206,9 @@ class CodeParser(AngleBracketsParser):
             line = line.replace(r'\<', LT_MARKER)
             line = line.replace(r'\>', GT_MARKER)
             lines.append(line)
+        else:
+            if is_code:
+                lines[-1] += CODE_ENDS_MARKER
         self.current_line = '\n'.join(lines)
         self._find_spans()
         self._make_gaps()
@@ -215,11 +218,17 @@ class CodeParser(AngleBracketsParser):
             question, answer = gap_making.make_gaps_by_spans(
                 self.clean_line, span, forced_gap=gap_making.PHRASE_GAP
             )
-            question = self._finalize_question(question)
+            question = finalize_question(question)
             self._add_card(question, answer)
         for m_id, spans in self.numbered_spans.items():
             question, answer = gap_making.make_gaps_by_spans(
                 self.clean_line, *spans, forced_gap=gap_making.PHRASE_GAP
             )
-            question = self._finalize_question(question)
+            question = finalize_question(question)
             self._add_card(question, answer)
+
+
+# parser = AngleBracketsParser(Path('..', 'txt', 'angle_input.txt'))
+# parser = CodeParser(Path('..', 'txt', 'code_input.txt'))
+# notes = parser.parse()
+# print(notes)
