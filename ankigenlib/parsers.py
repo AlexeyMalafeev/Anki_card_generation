@@ -22,7 +22,7 @@ def finalize_question(question):
     question = question.replace(CODE_ENDS_MARKER, CODE_ENDS_TAG)
     question = question.replace(LT_MARKER, '<')
     question = question.replace(GT_MARKER, '>')
-    # question = question.replace('\n', '<br>')
+    question = question.replace('\n', '<br>')
     question = question.replace(NEW_LINE_MARKER, '<br>')
     question = question.replace('\t', '  ')
     return question
@@ -226,9 +226,3 @@ class CodeParser(AngleBracketsParser):
             )
             question = finalize_question(question)
             self._add_card(question, answer)
-
-
-# parser = AngleBracketsParser(Path('..', 'txt', 'angle_input.txt'))
-# parser = CodeParser(Path('..', 'txt', 'code_input.txt'))
-# notes = parser.parse()
-# print(notes)

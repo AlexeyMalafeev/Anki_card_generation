@@ -50,10 +50,10 @@ def test_code_parser():
     print(result)
     expected = (
         (
-            'Cool Python code:<br><span style="font-size:medium"><code align="left" style="color: green"><pre>while _____(?):<br>  print(\'love you\')', 'True',
-            'Cool Python code:<br><span style="font-size:medium"><code align="left" style="color: green"><pre>while True:<br>  print(_____(?))', "'love you'"),
+            'Cool Python code:<br><span style="font-size:medium"><code align="left" style="color: green"><pre>while _____(?):<br>  print(\'love you\')</pre></code></span>', 'True',
+            'Cool Python code:<br><span style="font-size:medium"><code align="left" style="color: green"><pre>while True:<br>  print(_____(?))</pre></code></span>', "'love you'"),
         (
-            'More cool code:<br><span style="font-size:medium"><code align="left" style="color: green"><pre>if _____(?) < _____(?):<br>  print(\'a is less than b\')', 'a<br>b'
+            'More cool code:<br><span style="font-size:medium"><code align="left" style="color: green"><pre>if _____(?) < _____(?):<br>  print(\'a is less than b\')</pre></code></span>', 'a<br>b',
         )
     )
     assert result == expected
