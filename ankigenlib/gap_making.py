@@ -1,7 +1,7 @@
 import re
 
 
-DO_NOT_REPLACE = set('a an and at by in of on or to up'.split())
+DO_NOT_REPLACE = set('a an and at by in of on or the to up'.split())
 
 
 PHRASE_GAP = '_____(?)'
@@ -31,7 +31,7 @@ def get_gap(target):
 def _enhance_gap(target):
     gap = WORD_GAP
     if '-' in target:
-        gap = WORD_GAP + ('-' + WORD_GAP) * target.count('-')
+        gap = '-'.join([_enhance_gap(w) for w in target.split('-')])
     if target.endswith('ed'):
         gap += 'ed'
     elif target.endswith('ly'):
