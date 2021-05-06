@@ -1,11 +1,13 @@
 from collections import defaultdict
 from pathlib import Path
 import re
+from typing import Optional
 
 
 from ankigenlib import gap_making
 
 
+ANSWER_ADDITION_MARKER = 'ans:'
 CODE_ENDS_MARKER = '&CODE_ENDS&'
 CODE_STARTS_MARKER = '&CODE_STARTS&'
 CODE_ENDS_TAG = '</pre></code></span>'
@@ -17,7 +19,7 @@ NOTE_SEPARATOR = '---'
 PTRN_ANGLE_BRACKETS = r'\d?<.+?>'
 
 
-def finalize_question(question):
+def finalize_question(question: str, answer: str) -> (str, str):
     question = question.replace(CODE_STARTS_MARKER, CODE_STARTS_TAG)
     question = question.replace(CODE_ENDS_MARKER, CODE_ENDS_TAG)
     question = question.replace(LT_MARKER, '<')
@@ -25,7 +27,13 @@ def finalize_question(question):
     question = question.replace('\n', '<br>')
     question = question.replace(NEW_LINE_MARKER, '<br>')
     question = question.replace('\t', '  ')
-    return question
+    ans_add_ind = question.find(ANSWER_ADDITION_MARKER)
+    if ans_add_ind != -1:
+        ans_add = question[ans_add_ind:]
+        ans_add = ans_add[len(ANSWER_ADDITION_MARKER):].strip()
+        answer += f'<br><br>{ans_add}'
+        question = question[:ans_add_ind]
+    return question, answer
 
 
 def format_line_for_question(line: str) -> str:
@@ -122,11 +130,11 @@ class AngleBracketsParser(BaseParser):
             Twelve 1<thirteen> fourteen 1<fifteen> sixteen <seventeen>
             ...
     """
+    forced_gap = None
+
     def __init__(self, path_to_input):
         super().__init__(path_to_input)
-        # self.cards_to_add = []  # [q1, a1, q2, a2, q3, a3, ...]
-        self.normal_spans = []
-        self.numbered_spans = defaultdict(list)
+        self.spans: Optional[defaultdict] = None
         self.current_line = ''
         self.clean_line = ''
 
@@ -137,38 +145,38 @@ class AngleBracketsParser(BaseParser):
             self._make_gaps()
 
     def _find_spans(self):
-        self.numbered_spans = defaultdict(list)
-        self.normal_spans = []
+        self.spans = defaultdict(list)
         line = self.current_line  # for brevity
         self.clean_line = ''
         matches = re.finditer(PTRN_ANGLE_BRACKETS, line)
         offset = 0
         prev_end = 0
+        single_gap_id = 0
         for m in matches:
             start, end = m.span()
             self.clean_line += line[prev_end:start]
             m_text = line[start:end]
             if m_text.startswith('<'):
                 diff = 2
-                target_list = self.normal_spans
+                single_gap_id += 1
+                card_id = f'auto{single_gap_id}'  # avoids overlapping with manually numbered spans
             else:
                 diff = 3
-                m_id = m_text[0]
-                target_list = self.numbered_spans[m_id]
-            target_list.append((start - offset, end - offset - diff))
+                card_id = m_text[0]
+            self.spans[card_id].append((start - offset, end - offset - diff))
             self.clean_line += m_text[diff - 1:-1]
             offset += diff
             prev_end = end
         self.clean_line += line[prev_end:]
 
     def _make_gaps(self):
-        for span in self.normal_spans:
-            question, answer = gap_making.make_gaps_by_spans(self.clean_line, span)
-            question = finalize_question(question)
-            self._add_card(question, answer)
-        for m_id, spans in self.numbered_spans.items():
-            question, answer = gap_making.make_gaps_by_spans(self.clean_line, *spans)
-            question = finalize_question(question)
+        for _, spans in self.spans.items():
+            question, answer = gap_making.make_gaps_by_spans(
+                self.clean_line,
+                *spans,
+                forced_gap=self.forced_gap,
+            )
+            question, answer = finalize_question(question, answer)
             self._add_card(question, answer)
 
 
@@ -189,6 +197,7 @@ class CodeParser(AngleBracketsParser):
                 code <code> code
                 <code code> code
     """
+    forced_gap = gap_making.PHRASE_GAP
 
     def _make_cards(self):
         lines = []
@@ -212,17 +221,3 @@ class CodeParser(AngleBracketsParser):
         self.current_line = '\n'.join(lines)
         self._find_spans()
         self._make_gaps()
-
-    def _make_gaps(self):
-        for span in self.normal_spans:
-            question, answer = gap_making.make_gaps_by_spans(
-                self.clean_line, span, forced_gap=gap_making.PHRASE_GAP
-            )
-            question = finalize_question(question)
-            self._add_card(question, answer)
-        for m_id, spans in self.numbered_spans.items():
-            question, answer = gap_making.make_gaps_by_spans(
-                self.clean_line, *spans, forced_gap=gap_making.PHRASE_GAP
-            )
-            question = finalize_question(question)
-            self._add_card(question, answer)
