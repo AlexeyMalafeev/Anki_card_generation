@@ -32,7 +32,7 @@ def _enhance_gap(target):
     gap = WORD_GAP
     if '-' in target:
         gap = '-'.join([_enhance_gap(w) for w in target.split('-')])
-    if target.endswith('ed'):
+    elif target.endswith('ed'):
         gap += 'ed'
     elif target.endswith('ly'):
         gap += 'ly'
