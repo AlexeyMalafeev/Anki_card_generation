@@ -7,7 +7,7 @@ from typing import Optional
 from ankigenlib import gap_making
 
 
-ANSWER_ADDITION_MARKER = 'ans:'
+ANSWER_ADDITION_MARKER = '###'
 CODE_ENDS_MARKER = '&CODE_ENDS&'
 CODE_STARTS_MARKER = '&CODE_STARTS&'
 CODE_ENDS_TAG = '</pre></code></span>'
