@@ -39,6 +39,8 @@ def finalize_question(question: str, answer: str) -> (str, str):
 def format_line_for_question(line: str) -> str:
     line = line.replace('<br>', '\n')
     line = line.replace('’', '\'')
+    line = line.replace('“', '"')
+    line = line.replace('”', '"')
     if line.endswith('.'):
         line = line[:-1]
     return line
