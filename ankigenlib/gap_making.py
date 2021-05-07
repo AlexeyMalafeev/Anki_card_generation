@@ -32,8 +32,12 @@ def _enhance_gap(target):
     gap = WORD_GAP
     if '-' in target:
         gap = '-'.join([_enhance_gap(w) for w in target.split('-')])
+    elif target in DO_NOT_REPLACE:
+        gap = target
     elif target.endswith('ed'):
         gap += 'ed'
+    elif target.endswith('er'):
+        gap += 'er'
     elif target.endswith('ly'):
         gap += 'ly'
     elif target.endswith('less'):
@@ -50,8 +54,6 @@ def _enhance_gap(target):
         gap += 'able'
     elif target.endswith('ing'):
         gap += 'ing'
-    elif target in DO_NOT_REPLACE:
-        gap = target
     return gap
 
 
