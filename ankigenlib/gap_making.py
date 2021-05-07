@@ -30,6 +30,10 @@ def get_gap(target):
 
 def _enhance_gap(target):
     gap = WORD_GAP
+    add_comma = False
+    if target.endswith(','):
+        target = target[:-1]
+        add_comma = True
     if '-' in target:
         gap = '-'.join([_enhance_gap(w) for w in target.split('-')])
     elif target in DO_NOT_REPLACE:
@@ -54,6 +58,8 @@ def _enhance_gap(target):
         gap += 'able'
     elif target.endswith('ing'):
         gap += 'ing'
+    if add_comma:
+        gap += ','
     return gap
 
 
