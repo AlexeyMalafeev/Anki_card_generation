@@ -2,6 +2,7 @@ import re
 
 
 DO_NOT_REPLACE = set('a an and at by in of on or the to up'.split())
+REPLACEMENTS = 'ed er ly less ty tion tions s able al ing'.split()
 
 
 PHRASE_GAP = '_____(?)'
@@ -36,28 +37,11 @@ def _enhance_gap(target):
         add_comma = True
     if '-' in target:
         gap = '-'.join([_enhance_gap(w) for w in target.split('-')])
-    elif target in DO_NOT_REPLACE:
-        gap = target
-    elif target.endswith('ed'):
-        gap += 'ed'
-    elif target.endswith('er'):
-        gap += 'er'
-    elif target.endswith('ly'):
-        gap += 'ly'
-    elif target.endswith('less'):
-        gap += 'less'
-    elif target.endswith('ty'):
-        gap += 'ty'
-    elif target.endswith('tion'):
-        gap += 'tion'
-    elif target.endswith('tions'):
-        gap += 'tions'
-    elif target.endswith('s'):
-        gap += 's'
-    elif target.endswith('able'):
-        gap += 'able'
-    elif target.endswith('ing'):
-        gap += 'ing'
+    else:
+        for repl in REPLACEMENTS:
+            if target.endswith(repl):
+                gap += repl
+                break
     if add_comma:
         gap += ','
     return gap
