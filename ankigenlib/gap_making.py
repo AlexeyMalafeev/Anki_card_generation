@@ -1,8 +1,34 @@
 import re
 
 
-DO_NOT_REPLACE = set('a an and at by in of on or the to up'.split())
-REPLACEMENTS = 'ed er ly less ty tion tions s able al ing'.split()
+DO_NOT_REPLACE = {
+    'a',
+    'an',
+    'and',
+    'at',
+    'by',
+    'for',
+    'in',
+    'of',
+    'on',
+    'or',
+    'the',
+    'to',
+    'up',
+}
+REPLACEMENTS = (
+    'ed',
+    'er',
+    'ly',
+    'less',
+    'ty',
+    'tion',
+    'tions',
+    's',
+    'able',
+    'al',
+    'ing'
+)
 
 
 PHRASE_GAP = '_____(?)'
