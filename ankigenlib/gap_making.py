@@ -63,6 +63,8 @@ def _enhance_gap(target):
         add_comma = True
     if '-' in target:
         gap = '-'.join([_enhance_gap(w) for w in target.split('-')])
+    elif '/' in target:
+        gap = '/'.join([_enhance_gap(w) for w in target.split('/')])
     else:
         for repl in REPLACEMENTS:
             if target.endswith(repl):
