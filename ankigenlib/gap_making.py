@@ -31,6 +31,7 @@ REPLACEMENTS = (
 )
 
 
+MAX_SEPARATE_GAPS = 3  # if more than 3 words need to be gapped, it is a phrase gap: _____(?)
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'
 
@@ -50,7 +51,10 @@ def auto_a_before_gap(text: str) -> str:
 
 def get_gap(target):
     gaps = []
-    for targ in target.split():
+    parts = target.split()
+    if len(parts) > MAX_SEPARATE_GAPS:
+        return PHRASE_GAP
+    for targ in parts:
         gaps.append(_enhance_gap(targ))
     return ' '.join(gaps)
 
