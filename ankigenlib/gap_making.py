@@ -31,6 +31,7 @@ REPLACEMENTS = (
 )
 
 
+DIGIT_GAP = '__'
 MAX_SEPARATE_GAPS = 3  # if more than 3 words need to be gapped, it is a phrase gap: _____(?)
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'
@@ -74,6 +75,8 @@ def _enhance_gap(target):
             if target.endswith(repl):
                 gap += repl
                 break
+    if target.isdigit():
+        gap = DIGIT_GAP
     if add_comma:
         gap += ','
     return gap
