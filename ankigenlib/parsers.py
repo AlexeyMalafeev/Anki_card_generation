@@ -12,9 +12,9 @@ CODE_ENDS_MARKER = '&CODE_ENDS&'
 CODE_STARTS_MARKER = '&CODE_STARTS&'
 CODE_ENDS_TAG = '</pre></code></span>'
 CODE_STARTS_TAG = '<span style="font-size:medium"><code align="left" style="color: green"><pre>'
-GT_MARKER = '&GT&'
-LT_MARKER = '&LT&'
-NEW_LINE_MARKER = '&NL&'
+GT_MARKER = '&GT&'  # for escaping > with \
+LT_MARKER = '&LT&'  # for escaping < with \
+NEW_LINE_MARKER = '&NL&'  # for formatting
 NOTE_SEPARATOR = '---'
 PTRN_ANGLE_BRACKETS = r'\d?<.+?>'
 
@@ -124,6 +124,7 @@ class AngleBracketsParser(BaseParser):
         All answers are in angle brackets.
         Standard note separator.
         Multiple answers per card are supported with `1<...> ... 1<...>`, `2<...> ... 2<...>`, etc.
+        For literal angle brackets, escape them with backslash
 
         Example:
             One two <three> four five six
