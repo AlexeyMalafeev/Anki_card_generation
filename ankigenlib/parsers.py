@@ -61,10 +61,13 @@ class BaseParser:
         self.answer: str = ''
 
     def _add_card(self, question, answer):
+        assert answer.strip() != '', f'for question "{question}", answer "{answer}" is empty'
         self.cards.extend([question, answer])
 
     def _add_note(self):
-        self.notes.append(tuple(self.cards))
+        cards = tuple(self.cards)
+        assert cards != tuple(), f'no cards can be made for snippet "{self.current_snippet}"'
+        self.notes.append(cards)
         self.cards = []
 
     def _do_after_iteration(self):
