@@ -32,7 +32,7 @@ REPLACEMENTS = (
 
 
 DIGIT_GAP = '__'
-MAX_SEPARATE_GAPS = 3  # if more than 3 words need to be gapped, it is a phrase gap: _____(?)
+MAX_SEPARATE_GAPS = 2  # if _above_ this number of words to be gapped, make a phrase gap: _____(?)
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'
 
