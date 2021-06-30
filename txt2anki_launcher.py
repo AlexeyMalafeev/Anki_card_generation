@@ -17,12 +17,16 @@ target_deck = menu(
     title='Choose the target deck:',
 )
 
-ankify(
-    input_path=input_path,
-    parse_mode=parse_mode,
-    target_deck=target_deck,
-    ask_before_adding=True,
-)
+try:
+    ankify(
+        input_path=input_path,
+        parse_mode=parse_mode,
+        target_deck=target_deck,
+        ask_before_adding=True,
+    )
+except Exception as e:  # noqa
+    print(e)
+    print('Failed to generate notes/cards')
 
 if yn(f'Purge the source file "{input_path}"?'):
     input_path.write_text('')
