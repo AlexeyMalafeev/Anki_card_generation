@@ -75,7 +75,7 @@ def _enhance_gap(target):
             if target.endswith(repl):
                 gap += repl
                 break
-    if target.isdigit():
+    if target.isdigit() or all(not c.isalnum() for c in target):
         gap = DIGIT_GAP
     if add_comma:
         gap += ','
