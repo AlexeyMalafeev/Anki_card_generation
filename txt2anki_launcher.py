@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from ankigenlib.anki_connect import sync
 from ankigenlib.txt2anki import ankify, PARSE_MODES
 from ankigenlib.ui import menu, yn
 
@@ -30,3 +31,6 @@ except Exception as e:  # noqa
 
 if yn(f'Purge the source file "{input_path}"?'):
     input_path.write_text('')
+
+if yn('Sync Anki?'):
+    sync()

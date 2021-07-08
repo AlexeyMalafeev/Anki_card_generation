@@ -76,5 +76,13 @@ def make_notes(
     return notes
 
 
+def sync():
+    response = anki_invoke('sync')
+    if response is None:
+        print('synced successfully')
+    else:
+        print(response)
+
+
 def _request(action, **params):
     return {'action': action, 'params': params, 'version': 6}
