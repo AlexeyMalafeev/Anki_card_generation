@@ -136,7 +136,7 @@ class AngleBracketsParser(BaseParser):
             Twelve 1<thirteen> fourteen 1<fifteen> sixteen <seventeen>
             ...
     """
-    forced_gap = None
+    use_simple_gaps = False
 
     def __init__(self, path_to_input):
         super().__init__(path_to_input)
@@ -180,7 +180,7 @@ class AngleBracketsParser(BaseParser):
             question, answer = gap_making.make_gaps_by_spans(
                 self.clean_line,
                 *spans,
-                forced_gap=self.forced_gap,
+                use_simple_gaps=self.use_simple_gaps,
             )
             question, answer = finalize_question(question, answer)
             self._add_card(question, answer)
@@ -197,13 +197,13 @@ class CodeParser(AngleBracketsParser):
         Example:
             Cool Python code:
                 while <True>:
-                    print(<'love you'>)
+                    print(<'hello'>)
             ---
             More cool code:
                 code <code> code
                 <code code> code
     """
-    forced_gap = gap_making.PHRASE_GAP
+    use_simple_gaps = True
 
     def _make_cards(self):
         lines = []

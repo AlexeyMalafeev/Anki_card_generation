@@ -50,7 +50,21 @@ def auto_a_before_gap(text: str) -> str:
     return text
 
 
-def get_gap(target):
+def check_for_digit_gap(target):
+    return target.isdigit() or all(not c.isalnum() for c in target)
+
+
+def get_simple_gap(target):
+    if ' ' in target:
+        gap = PHRASE_GAP
+    elif check_for_digit_gap(target):
+        gap = DIGIT_GAP
+    else:
+        gap = WORD_GAP
+    return gap
+
+
+def get_smart_gap(target):
     gaps = []
     parts = target.split()
     if len(parts) > MAX_SEPARATE_GAPS:
@@ -75,7 +89,7 @@ def _enhance_gap(target):
             if target.endswith(repl):
                 gap += repl
                 break
-    if target.isdigit() or all(not c.isalnum() for c in target):
+    if check_for_digit_gap(target):
         gap = DIGIT_GAP
     if add_comma:
         gap += ','
@@ -89,7 +103,7 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
     except re.error:
         print(f'{text = }, {target = }, {gap = }')
         raise
-    gap = get_gap(target)
+    gap = get_smart_gap(target)
     for match_obj in reversed(list(matches)):
         start, end = match_obj.span()
         orig_target = text[start:end]
@@ -98,7 +112,7 @@ def make_gap(text: str, text_lower: str, target: str, gap: str = WORD_GAP) -> tu
     return text, orig_target
 
 
-def make_gaps_by_spans(text: str, *spans, forced_gap=None) -> (str, str):
+def make_gaps_by_spans(text: str, *spans, use_simple_gaps=False) -> (str, str):
     answers = []
     prev_answer = ''
     question = text
@@ -109,10 +123,10 @@ def make_gaps_by_spans(text: str, *spans, forced_gap=None) -> (str, str):
         if answer != prev_answer:
             answers.append(answer)
             prev_answer = answer
-        if forced_gap is None:
-            gap = get_gap(answer)
+        if use_simple_gaps:
+            gap = get_simple_gap(answer)
         else:
-            gap = forced_gap
+            gap = get_smart_gap(answer)
         gaps.append(gap)
     spans = reversed(spans)
     gaps = reversed(gaps)
