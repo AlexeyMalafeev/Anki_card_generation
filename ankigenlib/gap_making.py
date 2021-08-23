@@ -35,6 +35,38 @@ DIGIT_GAP = '__'
 MAX_SEPARATE_GAPS = 2  # if _above_ this number of words to be gapped, make a phrase gap: _____(?)
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'
+GAP_SPECIAL_CASES = {
+    'are': '_____(are or aren\'t?)',
+    'are not': '_____(are or aren\'t?)',
+    'aren\'t': '_____(are or aren\'t?)',
+
+    'can': '_____(can or can\'t?)',
+    'cannot': '_____(can or can\'t?)',
+    'can\'t': '_____(can or can\'t?)',
+
+    'have': '_____(have or don\'t have?)',
+    'don\'t have': '_____(have or don\'t have?)',
+    'doesn\'t have': '_____(have or doesn\'t have?)',
+
+    'is': '_____(is or isn\'t?)',
+    'is not': '_____(is or isn\'t?)',
+    'isn\'t': '_____(is or isn\'t?)',
+
+    'must': '_____(must or don\'t have to?)',
+    'don\'t have to': '_____(must or don\'t have to?)',
+    'doesn\'t have to': '_____(must or doesn\'t have to?)',
+
+    'need': '_____(need or don\'t need?)',
+    'don\'t need': '_____(need or don\'t need?)',
+    'doesn\'t need': '_____(need or doesn\'t need?)',
+
+    'should': '_____(should or shouldn\'t?)',
+    'should not': '_____(should or shouldn\'t?)',
+    'shouldn\'t': '_____(should or shouldn\'t?)',
+
+    'will': '_____(will or won\'t?)',
+    'won\'t': '_____(will or won\'t?)',
+}
 
 
 def a_before_gap(prev_word):
@@ -64,7 +96,9 @@ def get_simple_gap(target):
     return gap
 
 
-def get_smart_gap(target):
+def get_smart_gap(target: str) -> str:
+    if target in GAP_SPECIAL_CASES:
+        return GAP_SPECIAL_CASES[target]
     gaps = []
     parts = target.split()
     if len(parts) > MAX_SEPARATE_GAPS:
