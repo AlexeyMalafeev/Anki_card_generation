@@ -38,6 +38,7 @@ WORD_GAP = '_____'
 GAP_SPECIAL_CASES = {
     'are': '_____(are or aren\'t?)',
     'are not': '_____(are or aren\'t?)',
+    'are no': '_____(are or are no?)',
     'aren\'t': '_____(are or aren\'t?)',
 
     'can': '_____(can or can\'t?)',
@@ -45,14 +46,20 @@ GAP_SPECIAL_CASES = {
     'can\'t': '_____(can or can\'t?)',
 
     'have': '_____(have or don\'t have?)',
+    'has': '_____(has or doesn\'t have?)',
+    'have no': '_____(have or have no?)',
+    'has no': '_____(has or has no?)',
     'don\'t have': '_____(have or don\'t have?)',
     'doesn\'t have': '_____(have or doesn\'t have?)',
 
     'is': '_____(is or isn\'t?)',
     'is not': '_____(is or isn\'t?)',
+    'is no': '_____(is or is no?)',
     'isn\'t': '_____(is or isn\'t?)',
 
     'must': '_____(must or don\'t have to?)',
+    'must not': '_____(can or must not?)',
+    'mustn\'t': '_____(can or must not?)',
     'don\'t have to': '_____(must or don\'t have to?)',
     'doesn\'t have to': '_____(must or doesn\'t have to?)',
 
