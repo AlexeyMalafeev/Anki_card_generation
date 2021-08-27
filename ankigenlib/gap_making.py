@@ -41,6 +41,11 @@ GAP_SPECIAL_CASES = {
     'are no': '_____(are or are no?)',
     'aren\'t': '_____(are or aren\'t?)',
 
+    'do': '_____(do or don\'t?)',
+    'don\'t': '_____(do or don\'t?)',
+    'does': '_____(does or doesn\'t?)',
+    'doesn\'t': '_____(does or doesn\'t?)',
+
     'can': '_____(can or can\'t?)',
     'cannot': '_____(can or can\'t?)',
     'can\'t': '_____(can or can\'t?)',
@@ -73,6 +78,9 @@ GAP_SPECIAL_CASES = {
 
     'will': '_____(will or won\'t?)',
     'won\'t': '_____(will or won\'t?)',
+
+    'with': '_____(with or without?)',
+    'without': '_____(with or without?)',
 }
 
 
