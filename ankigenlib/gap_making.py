@@ -1,6 +1,9 @@
 import re
 
 
+from ankigenlib.gap_special_cases import GAP_SPECIAL_CASES
+
+
 DO_NOT_REPLACE = {
     'a',
     'an',
@@ -35,65 +38,6 @@ DIGIT_GAP = '__'
 MAX_SEPARATE_GAPS = 2  # if _above_ this number of words to be gapped, make a phrase gap: _____(?)
 PHRASE_GAP = '_____(?)'
 WORD_GAP = '_____'
-GAP_SPECIAL_CASES = {
-    'are': '_____(are or aren\'t?)',
-    'are not': '_____(are or aren\'t?)',
-    'are no': '_____(are or are no?)',
-    'aren\'t': '_____(are or aren\'t?)',
-
-    'do': '_____(do or don\'t?)',
-    'don\'t': '_____(do or don\'t?)',
-    'do not': '_____(do or don\'t?)',
-    'does': '_____(does or doesn\'t?)',
-    'doesn\'t': '_____(does or doesn\'t?)',
-    'does not': '_____(does or doesn\'t?)',
-
-    'can': '_____(can or can\'t?)',
-    'cannot': '_____(can or can\'t?)',
-    'can\'t': '_____(can or can\'t?)',
-
-    'have': '_____(have or don\'t have?)',
-    'has': '_____(has or doesn\'t have?)',
-    'have no': '_____(have or have no?)',
-    'has no': '_____(has or has no?)',
-    'don\'t have': '_____(have or don\'t have?)',
-    'do not have': '_____(have or don\'t have?)',
-    'doesn\'t have': '_____(has or doesn\'t have?)',
-    'does not have': '_____(has or doesn\'t have?)',
-
-    'good': '_____(good or bad?)',
-    'bad': '_____(good or bad?)',
-
-    'is': '_____(is or isn\'t?)',
-    'is not': '_____(is or isn\'t?)',
-    'is no': '_____(is or is no?)',
-    'isn\'t': '_____(is or isn\'t?)',
-
-    'must': '_____(must or don\'t have to?)',
-    'must not': '_____(can or must not?)',
-    'mustn\'t': '_____(can or must not?)',
-    'don\'t have to': '_____(must or don\'t have to?)',
-    'do not have to': '_____(must or don\'t have to?)',
-    'doesn\'t have to': '_____(must or doesn\'t have to?)',
-    'does not have to': '_____(must or doesn\'t have to?)',
-
-    'need': '_____(need or don\'t need?)',
-    'don\'t need': '_____(need or don\'t need?)',
-    'doesn\'t need': '_____(need or doesn\'t need?)',
-
-    'possible': '_____(possible or impossible?)',
-    'impossible': '_____(possible or impossible?)',
-
-    'should': '_____(should or shouldn\'t?)',
-    'should not': '_____(should or shouldn\'t?)',
-    'shouldn\'t': '_____(should or shouldn\'t?)',
-
-    'will': '_____(will or won\'t?)',
-    'won\'t': '_____(will or won\'t?)',
-
-    'with': '_____(with or without?)',
-    'without': '_____(with or without?)',
-}
 
 
 def a_before_gap(prev_word):
