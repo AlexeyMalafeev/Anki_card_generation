@@ -19,7 +19,7 @@ DO_NOT_REPLACE = {
     'to',
     'up',
 }
-REPLACEMENTS = (
+ENDINGS_TO_KEEP = (
     'ed',
     'er',
     'ly',
@@ -27,10 +27,12 @@ REPLACEMENTS = (
     'ty',
     'tion',
     'tions',
-    's',
     'able',
     'al',
-    'ing'
+    'ing',
+    'ism',
+    'isms',
+    's',
 )
 
 
@@ -90,7 +92,7 @@ def _enhance_gap(target):
     elif '/' in target:
         gap = '/'.join([_enhance_gap(w) for w in target.split('/')])
     else:
-        for repl in REPLACEMENTS:
+        for repl in ENDINGS_TO_KEEP:
             if target.endswith(repl):
                 gap += repl
                 break
